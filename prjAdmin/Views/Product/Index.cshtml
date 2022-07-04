@@ -1,0 +1,110 @@
+﻿@model IEnumerable<prjAdmin.ViewModels.CProductViewModel>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1 class="h1" style="margin-top:0.5em">產品列表</h1>
+<!-- Search form -->
+<form class="navbar-search form-inline col-md-4" id="navbar-search-main">
+    <div class="input-group input-group-merge search-bar">
+        <span class="input-group-text" id="topbar-addon">
+            <svg class="icon icon-xs" x-description="Heroicon name: solid/search" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path>
+            </svg>
+        </span>
+        <input type="text" class="form-control" id="topbarInputIconLeft" placeholder="搜尋" aria-label="Search" aria-describedby="topbar-addon">
+    </div>
+</form>
+
+<br />
+<button class="btn btn-gray-800 d-inline-flex align-items-center me-2 dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    <svg class="icon icon-xs me-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+    新增產品
+</button>
+<br />
+<br />
+<table style="text-align: center ;">
+    <thead>
+        <tr>
+            <th class="col-md-1">
+                序
+            </th>
+            <th class="col-md-1">
+                @Html.DisplayNameFor(model => model.ProductName)
+            </th>
+            <th class="col-md-1">
+                @Html.DisplayNameFor(model => model.Category.CategoriesName)
+            </th>
+            <th class="col-md-1">
+                @Html.DisplayNameFor(model => model.Country.CountryName)
+            </th>
+            <th class="col-md-1">
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
+            <th class="col-md-2">
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th class="col-md-1">
+                @Html.DisplayNameFor(model => model.Stock)
+            </th>
+            <th class="col-md-1">
+                @Html.DisplayNameFor(model => model.ClickCount)
+            </th>
+            <th class="col-md-1">
+                @Html.DisplayNameFor(model => model.TakeDown)
+            </th>
+            <th class="col-md-1">
+                @Html.DisplayNameFor(model => model.Star)
+            </th>
+            <th class="col-md-1"></th>
+        </tr>
+    </thead>
+    <tbody style="border-top: 0.125rem solid currentColor">
+        @{
+            int count = 0;
+            foreach (var item in Model)
+            {
+                count++;
+                <tr>
+                    <td>
+                        @count
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ProductName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Category.CategoriesName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Country.CountryName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Price)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Description)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Stock)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ClickCount)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TakeDown)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Star)
+                    </td>
+                    <td>
+                        @Html.ActionLink("修改", "Edit", "Product", new { /* id=item.PrimaryKey */ }, new { @class = "btn btn-sm btn-primary" })
+                        <br />
+                        <br />
+                        @Html.ActionLink("下架", "Details", "Product", new { /* id=item.PrimaryKey */}, new { @class = "btn btn-sm btn-secondary" })
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
