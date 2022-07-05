@@ -1,0 +1,93 @@
+﻿@model prjAdmin.ViewModels.CProductViewModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>CProductViewModel</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="ProductName" class="control-label"></label>
+                <input asp-for="ProductName" class="form-control" />
+                <span asp-validation-for="ProductName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Category.CategoriesName" class="control-label"></label>
+                <section class="form-control" id="section1">
+                </section>                
+                <span asp-validation-for="Category.CategoriesName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CountryId" class="control-label"></label>
+                <input asp-for="CountryId" class="form-control" />
+                <span asp-validation-for="CountryId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Price" class="control-label"></label>
+                <input asp-for="Price" class="form-control" />
+                <span asp-validation-for="Price" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <textarea asp-for="Description" class="form-control" rows="6" cols="40"></textarea>                
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Stock" class="control-label"></label>
+                <input asp-for="Stock" class="form-control" />
+                <span asp-validation-for="Stock" class="text-danger"></span>
+            </div>
+            <div class="form-group">                
+                <input asp-for="ClickCount" class="form-control" hidden/>                
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="TakeDown" /> @Html.DisplayNameFor(model => model.TakeDown)
+                </label>
+            </div>
+            <div class="form-group">
+                <label asp-for="Star" class="control-label"></label>
+                <input asp-for="Star" class="form-control" />
+                <span asp-validation-for="Star" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @*@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}*@
+<script>
+    const selCategory = document.querySelector("#section1");
+    @*LoadCategories();
+
+    async function LoadCategories() {
+        const response = await fetch('@Url.Content("~/api/category")'),
+            datas = await response.json();
+        datas.forEach(category => {
+            let opt = new Option(category.categoriesName, category.categoryId);
+            selCategory.options.add(opt);
+        });*@
+
+    fetch('@Url.Content("~/api/Category")').then(response => {
+        return response.json();
+    }).then(datas => {
+        datas.forEach((category) => {
+            const opt = new Option(category.categoriesName, category.categoryId);
+            selCategory.options.add(opt);
+        })
+    })    
+</script>
+}

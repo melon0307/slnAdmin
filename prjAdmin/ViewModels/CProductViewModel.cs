@@ -1,4 +1,5 @@
-﻿using prjAdmin.Models;
+﻿using Microsoft.AspNetCore.Http;
+using prjAdmin.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -28,5 +29,6 @@ namespace prjAdmin.ViewModels
         public double? Star { get; set; }
         public Category Category { get; set; }
         public Country Country { get; set; }
+        public IFormFile photo { get; set; }
     }
 }
