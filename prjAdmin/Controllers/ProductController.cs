@@ -45,10 +45,10 @@ namespace prjAdmin.Controllers
             }
             else
             {
-                if (vModel.txtKeyword == "上架")
-                    datas = list.Where(p => p.TakeDown == false);
+                if (vModel.txtKeyword == "上架")  
+                    datas = list.Where(p => p.TakeDown == false); // 輸入上架回傳上架商品
                 else if (vModel.txtKeyword == "下架")
-                    datas = list.Where(p => p.TakeDown == true);
+                    datas = list.Where(p => p.TakeDown == true); // 輸入下架回傳下架商品
                 else
                 {
                     datas = list.Where(p => p.ProductName.Contains(vModel.txtKeyword) || // 依輸入關鍵字查詢類別, 國家, 產品名
@@ -68,7 +68,7 @@ namespace prjAdmin.Controllers
         [HttpPost]
         public IActionResult Create(CProductViewModel p)
         {
-
+            // 新增產品
             Product prod = new Product();
             prod.ProductName = p.ProductName;
             prod.CategoryId = p.CategoryId;
@@ -81,6 +81,7 @@ namespace prjAdmin.Controllers
             _context.Products.Add(prod);
             _context.SaveChanges();
 
+            // 若新增的產品為咖啡類別，在咖啡資料表內新增該產品
             int productId = _context.Products.AsEnumerable().Last().ProductId;
             int coffeeCateId = _context.Categories.FirstOrDefault(c => c.CategoriesName == "咖啡").CategoryId;
 
@@ -101,6 +102,7 @@ namespace prjAdmin.Controllers
                 _context.SaveChanges();
             }
 
+            // 新增產品圖片
             if (p.photo != null)
             {
                 string pName = Guid.NewGuid().ToString() + ".jpg";
