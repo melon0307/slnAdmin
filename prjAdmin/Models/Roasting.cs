@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 #nullable disable
 
@@ -13,6 +14,7 @@ namespace prjAdmin.Models
         }
 
         public int RoastingId { get; set; }
+        [DisplayName("烘培法")]
         public string RoastingName { get; set; }
 
         public virtual ICollection<Coffee> Coffees { get; set; }

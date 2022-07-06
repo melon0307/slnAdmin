@@ -25,7 +25,7 @@ namespace prjAdmin.Models
         public int? Stock { get; set; }
         public int? ClickCount { get; set; }
         public bool TakeDown { get; set; }
-        public double? Star { get; set; }
+        public double? Star { get; set; }        
 
         public virtual Category Category { get; set; }
         public virtual Country Country { get; set; }

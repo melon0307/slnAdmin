@@ -36,8 +36,9 @@ namespace prjAdmin.Controllers
                 Stock = p.Stock,
                 ClickCount = p.ClickCount,
                 TakeDown = p.TakeDown,
-                Star = p.Star
+                Star = p.Star                
             });
+
 
             if (string.IsNullOrEmpty(vModel.txtKeyword)) // 若沒輸入關鍵字則回傳所有產品
             {
@@ -121,6 +122,22 @@ namespace prjAdmin.Controllers
                 _context.SaveChanges();
             }
 
+            return RedirectToAction("Index");
+        }
+
+        public IActionResult TakeDown(int id)
+        {
+            Product p = _context.Products.Find(id);
+            p.TakeDown = true;
+            _context.SaveChanges();
+            return RedirectToAction("Index");
+        }
+
+        public IActionResult Launch(int id)
+        {
+            Product p = _context.Products.Find(id);
+            p.TakeDown = false;
+            _context.SaveChanges();
             return RedirectToAction("Index");
         }
     }
