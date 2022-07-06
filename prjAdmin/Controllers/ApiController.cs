@@ -29,5 +29,28 @@ namespace prjAdmin.Controllers
             var category = _context.Categories;
             return Json(category);
         }
+
+        public IActionResult Country()
+        {
+            var country = _context.Countries;
+            return Json(country);
+        }
+
+        public IActionResult Roasting()
+        {
+            var roasting = _context.Roastings;
+            return Json(roasting);
+        }
+
+        public IActionResult Package()
+        {
+            var package = _context.Packages;
+            return Json(package);
+        }
+        public IActionResult Process()
+        {
+            var process = _context.Processes;
+            return Json(process);
+        }
     }
 }

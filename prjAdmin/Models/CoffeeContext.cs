@@ -50,11 +50,11 @@ namespace prjAdmin.Models
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            if (!optionsBuilder.IsConfigured)
-            {
-                //#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("Data Source=.;Initial Catalog=Coffee;Integrated Security=True");
-            }
+//            if (!optionsBuilder.IsConfigured)
+//            {
+//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+//                optionsBuilder.UseSqlServer("Data Source=.;Initial Catalog=Coffee;Integrated Security=True");
+//            }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -67,11 +67,31 @@ namespace prjAdmin.Models
 
                 entity.Property(e => e.AdminId).HasColumnName("AdminID");
 
-                entity.Property(e => e.AdminName)
+                entity.Property(e => e.Address).IsRequired();
+
+                entity.Property(e => e.BirthDay).HasColumnType("datetime");
+
+                entity.Property(e => e.Email)
                     .IsRequired()
                     .HasMaxLength(50);
 
-                entity.Property(e => e.AdminPassword)
+                entity.Property(e => e.FirstName)
+                    .IsRequired()
+                    .HasMaxLength(50);
+
+                entity.Property(e => e.Gender)
+                    .IsRequired()
+                    .HasMaxLength(50);
+
+                entity.Property(e => e.LastName)
+                    .IsRequired()
+                    .HasMaxLength(50);
+
+                entity.Property(e => e.Password)
+                    .IsRequired()
+                    .HasMaxLength(50);
+
+                entity.Property(e => e.Phone)
                     .IsRequired()
                     .HasMaxLength(50);
             });
@@ -493,6 +513,8 @@ namespace prjAdmin.Models
                 entity.Property(e => e.Photo1)
                     .HasColumnType("image")
                     .HasColumnName("Photo");
+
+                entity.Property(e => e.PhotoName).HasMaxLength(50);
             });
 
             modelBuilder.Entity<PhotoDetail>(entity =>

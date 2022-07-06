@@ -14,6 +14,7 @@ namespace prjAdmin.Models
 
         public int PhotoId { get; set; }
         public byte[] Photo1 { get; set; }
+        public string PhotoName { get; set; }
 
         public virtual ICollection<PhotoDetail> PhotoDetails { get; set; }
     }

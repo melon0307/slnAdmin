@@ -27,8 +27,15 @@ namespace prjAdmin.ViewModels
         public bool TakeDown { get; set; }
         [DisplayName("產品評價")]
         public double? Star { get; set; }
+        public int RoastingId { get; set; }
+        public int ProcessId { get; set; }
+        public int PackageId { get; set; }
+        public int? ConstellationId { get; set; }
+        [DisplayName("是否加入雨林聯盟")]
+        public bool RainForest { get; set; }
         public Category Category { get; set; }
         public Country Country { get; set; }
+        public Coffee Coffee { get; set; }
         public IFormFile photo { get; set; }
     }
 }

@@ -4,14 +4,18 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
-
-<h4>CProductViewModel</h4>
+<h1 class="h1" style="margin-top:0.5em">新增產品</h1>
+<div>
+    <a asp-action="Index" class="btn btn-secondary">返回產品列表</a>
+</div>
 <hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
+
+<form asp-action="Create" enctype="multipart/form-data">
+    <div style="display:flex">
+        <div style="width:2em"></div>
+        <div class="col-4">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <h4 style="text-decoration:underline">產品基本資料</h4>
             <div class="form-group">
                 <label asp-for="ProductName" class="control-label"></label>
                 <input asp-for="ProductName" class="form-control" />
@@ -19,13 +23,12 @@
             </div>
             <div class="form-group">
                 <label asp-for="Category.CategoriesName" class="control-label"></label>
-                <section class="form-control" id="section1">
-                </section>                
-                <span asp-validation-for="Category.CategoriesName" class="text-danger"></span>
+                <select asp-for="CategoryId" class="form-control" id="select1"></select>
+                <span asp-validation-for="CategoryId" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="CountryId" class="control-label"></label>
-                <input asp-for="CountryId" class="form-control" />
+                <label asp-for="Country.CountryName" class="control-label"></label>
+                <select asp-for="CountryId" class="form-control" id="select2"></select>
                 <span asp-validation-for="CountryId" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -35,7 +38,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="Description" class="control-label"></label>
-                <textarea asp-for="Description" class="form-control" rows="6" cols="40"></textarea>                
+                <textarea asp-for="Description" class="form-control" rows="6" cols="40"></textarea>
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -43,8 +46,9 @@
                 <input asp-for="Stock" class="form-control" />
                 <span asp-validation-for="Stock" class="text-danger"></span>
             </div>
-            <div class="form-group">                
-                <input asp-for="ClickCount" class="form-control" hidden/>                
+            <br />
+            <div class="form-group">
+                <input asp-for="ClickCount" class="form-control" hidden />
             </div>
             <div class="form-group form-check">
                 <label class="form-check-label">
@@ -52,42 +56,127 @@
                 </label>
             </div>
             <div class="form-group">
-                <label asp-for="Star" class="control-label"></label>
-                <input asp-for="Star" class="form-control" />
-                <span asp-validation-for="Star" class="text-danger"></span>
+                <input asp-for="Star" class="form-control" hidden />
             </div>
+            <br />
+            <div class="custom-file ">
+                <label class="custom-file-label col-md-3" for="customFile">選擇圖片</label>
+                <br />
+                <input type="file" class="custom-file-input col-md-6" id="customFile" name="photo">
+            </div>
+            <br />
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
-        </form>
+        </div>
+        <div style="width:5em"></div>
+        <div class="col-4">
+            <h4 style="text-decoration:underline">咖啡類詳細資料</h4>
+            <div class="form-group">
+                <label asp-for="Coffee.Package.PackageName" class="control-label"></label>
+                <select asp-for="PackageId" class="form-control" id="select3"></select>
+                <span asp-validation-for="PackageId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Coffee.Roasting.RoastingName" class="control-label"></label>
+                <select asp-for="RoastingId" class="form-control" id="select4"></select>
+                <span asp-validation-for="RoastingId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Coffee.Process.ProcessName" class="control-label"></label>
+                <select asp-for="ProcessId" class="form-control" id="select5"></select>
+                <span asp-validation-for="ProcessId" class="text-danger"></span>
+            </div>
+            <br />
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="RainForest" /> @Html.DisplayNameFor(model => model.RainForest)
+                </label>
+            </div>
+            <br />
+        </div>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+</form>
 
 @section Scripts {
     @*@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}*@
 <script>
-    const selCategory = document.querySelector("#section1");
-    @*LoadCategories();
+        const selCategory = document.querySelector("#select1"),
+              selCourtry = document.querySelector("#select2"),
+              selPackage = document.querySelector("#select3"),
+              selRoasting = document.querySelector("#select4"),
+              selProcess = document.querySelector("#select5");
+
+    LoadCategories();
+    LoadCountries();
+    LoadRoastings();
+    LoadPackages();
+    LoadProcesses();
 
     async function LoadCategories() {
         const response = await fetch('@Url.Content("~/api/category")'),
-            datas = await response.json();
+              datas = await response.json();
         datas.forEach(category => {
             let opt = new Option(category.categoriesName, category.categoryId);
             selCategory.options.add(opt);
-        });*@
+        });
+    };
 
-    fetch('@Url.Content("~/api/Category")').then(response => {
+    async function LoadCountries() {
+        const response = await fetch('@Url.Content("~/api/country")'),
+              datas = await response.json();
+        datas.forEach(country => {
+            let opt = new Option(country.countryName, country.countryId);
+            selCourtry.options.add(opt);
+        });
+    };
+
+
+    async function LoadRoastings() {
+        const response = await fetch('@Url.Content("~/api/Roasting")'),
+              datas = await response.json();
+        datas.forEach(roasting => {
+            let opt = new Option(roasting.roastingName, roasting.roastingId);
+            selRoasting.options.add(opt);
+        });
+    };
+
+
+    async function LoadPackages() {
+        const response = await fetch('@Url.Content("~/api/Package")'),
+              datas = await response.json();
+        datas.forEach(package => {
+            let opt = new Option(package.packageName, package.packageId);
+            selPackage.options.add(opt);
+        });
+    };
+
+
+    async function LoadProcesses() {
+        const response = await fetch('@Url.Content("~/api/Process")'),
+              datas = await response.json();
+        datas.forEach(process => {
+            let opt = new Option(process.processName, process.processId);
+            selProcess.options.add(opt);
+        });
+    };
+
+    @*fetch('@Url.Content("~/api/Category")').then(response => {
         return response.json();
     }).then(datas => {
         datas.forEach((category) => {
             const opt = new Option(category.categoriesName, category.categoryId);
             selCategory.options.add(opt);
-        })
-    })    
+        });
+    });
+
+    fetch('@Url.Content("~/api/County")').then(response => {
+        return response.json();
+    }).then(datas => {
+        datas.forEach((country) => {
+            const opt = new Option(country.countryName, country.countryId);
+            selCourtry.options.add(opt);
+        });
+    });*@
 </script>
 }
