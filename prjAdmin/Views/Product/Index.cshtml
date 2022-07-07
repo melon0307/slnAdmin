@@ -79,8 +79,8 @@
                     <td class="col-md-1">
                         @Html.DisplayFor(modelItem => item.Country.CountryName)
                     </td>
-                    <td class="col-md-1">
-                        @Html.DisplayFor(modelItem => item.Price)
+                    <td class="col-md-1">                        
+                        $@Convert.ToInt32(item.Price).ToString(".")
                     </td>
                     <td class="col-md-2">
                         @Html.DisplayFor(modelItem => item.Description)
