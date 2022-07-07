@@ -18,7 +18,8 @@ namespace prjAdmin.Models
         }
 
         public virtual DbSet<Admin> Admins { get; set; }
-        public virtual DbSet<AnswerTableDetail> AnswerTableDetails { get; set; }
+        public virtual DbSet<Article> Articles { get; set; }
+        public virtual DbSet<Awesome> Awesomes { get; set; }
         public virtual DbSet<Category> Categories { get; set; }
         public virtual DbSet<Coffee> Coffees { get; set; }
         public virtual DbSet<Comment> Comments { get; set; }
@@ -27,34 +28,28 @@ namespace prjAdmin.Models
         public virtual DbSet<Country> Countries { get; set; }
         public virtual DbSet<Coupon> Coupons { get; set; }
         public virtual DbSet<CouponDetail> CouponDetails { get; set; }
-        public virtual DbSet<Introduce> Introduces { get; set; }
-        public virtual DbSet<IntroducePhoto> IntroducePhotos { get; set; }
         public virtual DbSet<Member> Members { get; set; }
         public virtual DbSet<MyLike> MyLikes { get; set; }
-        public virtual DbSet<News> News { get; set; }
         public virtual DbSet<Order> Orders { get; set; }
         public virtual DbSet<OrderDetail> OrderDetails { get; set; }
         public virtual DbSet<OrderState> OrderStates { get; set; }
         public virtual DbSet<Package> Packages { get; set; }
         public virtual DbSet<Payment> Payments { get; set; }
         public virtual DbSet<Photo> Photos { get; set; }
-        public virtual DbSet<PhotoDetail> PhotoDetails { get; set; }
         public virtual DbSet<Process> Processes { get; set; }
         public virtual DbSet<Product> Products { get; set; }
-        public virtual DbSet<Qquestionnaire> Qquestionnaires { get; set; }
         public virtual DbSet<QuestionTable> QuestionTables { get; set; }
-        public virtual DbSet<QuestionTableDetail> QuestionTableDetails { get; set; }
         public virtual DbSet<Roasting> Roastings { get; set; }
         public virtual DbSet<ShoppingCar> ShoppingCars { get; set; }
         public virtual DbSet<ShoppingCarDetail> ShoppingCarDetails { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-//            if (!optionsBuilder.IsConfigured)
-//            {
+            if (!optionsBuilder.IsConfigured)
+            {
 //#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
 //                optionsBuilder.UseSqlServer("Data Source=.;Initial Catalog=Coffee;Integrated Security=True");
-//            }
+            }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -67,61 +62,49 @@ namespace prjAdmin.Models
 
                 entity.Property(e => e.AdminId).HasColumnName("AdminID");
 
-                entity.Property(e => e.Address).IsRequired();
+                entity.Property(e => e.AdminOk).HasColumnName("AdminOK");
 
-                entity.Property(e => e.BirthDay).HasColumnType("datetime");
+                entity.Property(e => e.ArticleOk).HasColumnName("ArticleOK");
 
-                entity.Property(e => e.Email)
-                    .IsRequired()
-                    .HasMaxLength(50);
+                entity.Property(e => e.Email).IsRequired();
 
-                entity.Property(e => e.FirstName)
-                    .IsRequired()
-                    .HasMaxLength(50);
+                entity.Property(e => e.MemberOk).HasColumnName("MemberOK");
 
-                entity.Property(e => e.Gender)
-                    .IsRequired()
-                    .HasMaxLength(50);
-
-                entity.Property(e => e.LastName)
-                    .IsRequired()
-                    .HasMaxLength(50);
+                entity.Property(e => e.OrderOk).HasColumnName("OrderOK");
 
                 entity.Property(e => e.Password)
                     .IsRequired()
                     .HasMaxLength(50);
 
-                entity.Property(e => e.Phone)
-                    .IsRequired()
-                    .HasMaxLength(50);
+                entity.Property(e => e.ProductOk).HasColumnName("ProductOK");
             });
 
-            modelBuilder.Entity<AnswerTableDetail>(entity =>
+            modelBuilder.Entity<Article>(entity =>
             {
-                entity.HasKey(e => e.AnswerTableDetailsId);
+                entity.HasNoKey();
 
-                entity.Property(e => e.AnswerTableDetailsId).HasColumnName("AnswerTableDetailsID");
+                entity.ToTable("Article");
 
-                entity.Property(e => e.Q1).HasMaxLength(50);
+                entity.Property(e => e.ArticleDate).HasColumnType("date");
 
-                entity.Property(e => e.Q2).HasMaxLength(50);
+                entity.Property(e => e.ArticleId).ValueGeneratedOnAdd();
 
-                entity.Property(e => e.Q3).HasMaxLength(50);
+                entity.Property(e => e.ArticleName).HasMaxLength(50);
+            });
 
-                entity.Property(e => e.Q4).HasMaxLength(50);
+            modelBuilder.Entity<Awesome>(entity =>
+            {
+                entity.ToTable("Awesome");
 
-                entity.Property(e => e.Q5).HasMaxLength(50);
+                entity.Property(e => e.CommentId).HasColumnName("CommentID");
 
-                entity.Property(e => e.Q6).HasMaxLength(50);
+                entity.Property(e => e.MemberId).HasColumnName("MemberID");
 
-                entity.Property(e => e.Q7).HasMaxLength(50);
-
-                entity.Property(e => e.QuestionTableDetailsId).HasColumnName("QuestionTableDetailsID");
-
-                entity.HasOne(d => d.QuestionTableDetails)
-                    .WithMany(p => p.AnswerTableDetails)
-                    .HasForeignKey(d => d.QuestionTableDetailsId)
-                    .HasConstraintName("FK_AnswerTableDetails_QuestionTableDetails");
+                entity.HasOne(d => d.Comment)
+                    .WithMany(p => p.Awesomes)
+                    .HasForeignKey(d => d.CommentId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Awesome_Comment");
             });
 
             modelBuilder.Entity<Category>(entity =>
@@ -152,8 +135,6 @@ namespace prjAdmin.Models
                     .IsRequired()
                     .HasMaxLength(50);
 
-                entity.Property(e => e.ConstellationId).HasColumnName("ConstellationID");
-
                 entity.Property(e => e.CountryId).HasColumnName("CountryID");
 
                 entity.Property(e => e.PackageId).HasColumnName("PackageID");
@@ -161,11 +142,6 @@ namespace prjAdmin.Models
                 entity.Property(e => e.ProcessId).HasColumnName("ProcessID");
 
                 entity.Property(e => e.RoastingId).HasColumnName("RoastingID");
-
-                entity.HasOne(d => d.Constellation)
-                    .WithMany(p => p.Coffees)
-                    .HasForeignKey(d => d.ConstellationId)
-                    .HasConstraintName("FK_Coffee_Constellation");
 
                 entity.HasOne(d => d.Country)
                     .WithMany(p => p.Coffees)
@@ -241,11 +217,11 @@ namespace prjAdmin.Models
 
                 entity.Property(e => e.ConstellationId).HasColumnName("ConstellationID");
 
+                entity.Property(e => e.ConstellationDate).HasMaxLength(50);
+
                 entity.Property(e => e.ConstellationName)
                     .IsRequired()
                     .HasMaxLength(50);
-
-                entity.Property(e => e.ConstellationPhoto).HasColumnType("image");
 
                 entity.Property(e => e.ConstellationProductId).HasColumnName("ConstellationProductID");
             });
@@ -322,40 +298,11 @@ namespace prjAdmin.Models
                     .HasConstraintName("FK_CouponDetail_Members");
             });
 
-            modelBuilder.Entity<Introduce>(entity =>
-            {
-                entity.HasKey(e => e.IntroducesId);
-
-                entity.Property(e => e.IntroducesId).HasColumnName("IntroducesID");
-
-                entity.Property(e => e.IntroducesName).HasMaxLength(50);
-            });
-
-            modelBuilder.Entity<IntroducePhoto>(entity =>
-            {
-                entity.HasKey(e => e.IntroducePhotosId);
-
-                entity.Property(e => e.IntroducePhotosId).HasColumnName("IntroducePhotosID");
-
-                entity.Property(e => e.IntroduceId).HasColumnName("IntroduceID");
-
-                entity.Property(e => e.IntroducePhoto1)
-                    .HasColumnType("image")
-                    .HasColumnName("IntroducePhoto");
-
-                entity.HasOne(d => d.Introduce)
-                    .WithMany(p => p.IntroducePhotos)
-                    .HasForeignKey(d => d.IntroduceId)
-                    .HasConstraintName("FK_IntroducePhotos_Introduces");
-            });
-
             modelBuilder.Entity<Member>(entity =>
             {
                 entity.Property(e => e.MemberId).HasColumnName("MemberID");
 
-                entity.Property(e => e.MemberAddress)
-                    .IsRequired()
-                    .HasMaxLength(50);
+                entity.Property(e => e.MemberAddress).HasMaxLength(50);
 
                 entity.Property(e => e.MemberBirthDay).HasColumnType("date");
 
@@ -375,8 +322,6 @@ namespace prjAdmin.Models
                 entity.Property(e => e.MemberPhone)
                     .IsRequired()
                     .HasMaxLength(50);
-
-                entity.Property(e => e.MemberPhoto).HasColumnType("image");
 
                 entity.Property(e => e.ShoppingCarId).HasColumnName("ShoppingCarID");
             });
@@ -406,15 +351,6 @@ namespace prjAdmin.Models
                     .HasConstraintName("FK_MyLike_Products");
             });
 
-            modelBuilder.Entity<News>(entity =>
-            {
-                entity.Property(e => e.NewsId).HasColumnName("NewsID");
-
-                entity.Property(e => e.NewsOverTime).HasColumnType("date");
-
-                entity.Property(e => e.NewsStartTime).HasColumnType("date");
-            });
-
             modelBuilder.Entity<Order>(entity =>
             {
                 entity.Property(e => e.OrderId).HasColumnName("OrderID");
@@ -428,6 +364,14 @@ namespace prjAdmin.Models
                     .HasMaxLength(50);
 
                 entity.Property(e => e.OrderDate).HasColumnType("date");
+
+                entity.Property(e => e.OrderPhone)
+                    .IsRequired()
+                    .HasMaxLength(50);
+
+                entity.Property(e => e.OrderReceiver)
+                    .IsRequired()
+                    .HasMaxLength(50);
 
                 entity.Property(e => e.OrderStateId).HasColumnName("OrderStateID");
 
@@ -510,35 +454,12 @@ namespace prjAdmin.Models
             {
                 entity.Property(e => e.PhotoId).HasColumnName("PhotoID");
 
-                entity.Property(e => e.Photo1)
-                    .HasColumnType("image")
-                    .HasColumnName("Photo");
-
-                entity.Property(e => e.PhotoName).HasMaxLength(50);
-            });
-
-            modelBuilder.Entity<PhotoDetail>(entity =>
-            {
-                entity.HasKey(e => e.PhotoDetailsId)
-                    .HasName("PK_PhotoDetails_1");
-
-                entity.Property(e => e.PhotoDetailsId).HasColumnName("PhotoDetailsID");
-
-                entity.Property(e => e.PhotoId).HasColumnName("PhotoID");
-
                 entity.Property(e => e.ProductId).HasColumnName("ProductID");
 
-                entity.HasOne(d => d.Photo)
-                    .WithMany(p => p.PhotoDetails)
-                    .HasForeignKey(d => d.PhotoId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_PhotoDetails_Photos");
-
                 entity.HasOne(d => d.Product)
-                    .WithMany(p => p.PhotoDetails)
+                    .WithMany(p => p.Photos)
                     .HasForeignKey(d => d.ProductId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_PhotoDetails_Products1");
+                    .HasConstraintName("FK_Photos_Products");
             });
 
             modelBuilder.Entity<Process>(entity =>
@@ -578,36 +499,6 @@ namespace prjAdmin.Models
                     .HasConstraintName("FK_Products_Country");
             });
 
-            modelBuilder.Entity<Qquestionnaire>(entity =>
-            {
-                entity.ToTable("Qquestionnaire");
-
-                entity.Property(e => e.QquestionnaireId).HasColumnName("QquestionnaireID");
-
-                entity.Property(e => e.CouponId).HasColumnName("CouponID");
-
-                entity.Property(e => e.MemberId).HasColumnName("MemberID");
-
-                entity.Property(e => e.QuestionTableId).HasColumnName("QuestionTableID");
-
-                entity.HasOne(d => d.Coupon)
-                    .WithMany(p => p.Qquestionnaires)
-                    .HasForeignKey(d => d.CouponId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Qquestionnaire_Coupon");
-
-                entity.HasOne(d => d.Member)
-                    .WithMany(p => p.Qquestionnaires)
-                    .HasForeignKey(d => d.MemberId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Qquestionnaire_Members");
-
-                entity.HasOne(d => d.QuestionTable)
-                    .WithMany(p => p.Qquestionnaires)
-                    .HasForeignKey(d => d.QuestionTableId)
-                    .HasConstraintName("FK_Qquestionnaire_QuestionTable");
-            });
-
             modelBuilder.Entity<QuestionTable>(entity =>
             {
                 entity.ToTable("QuestionTable");
@@ -617,174 +508,6 @@ namespace prjAdmin.Models
                 entity.Property(e => e.QuestionTableDetailsId).HasColumnName("QuestionTableDetailsID");
 
                 entity.Property(e => e.QuestionTableName).HasMaxLength(50);
-
-                entity.HasOne(d => d.QuestionTableDetails)
-                    .WithMany(p => p.QuestionTables)
-                    .HasForeignKey(d => d.QuestionTableDetailsId)
-                    .HasConstraintName("FK_QuestionTable_QuestionTableDetails");
-            });
-
-            modelBuilder.Entity<QuestionTableDetail>(entity =>
-            {
-                entity.HasKey(e => e.QuestionTableDetailsId);
-
-                entity.Property(e => e.QuestionTableDetailsId)
-                    .ValueGeneratedNever()
-                    .HasColumnName("QuestionTableDetailsID");
-
-                entity.Property(e => e.A11)
-                    .HasMaxLength(50)
-                    .HasColumnName("A1-1");
-
-                entity.Property(e => e.A12)
-                    .HasMaxLength(50)
-                    .HasColumnName("A1-2");
-
-                entity.Property(e => e.A13)
-                    .HasMaxLength(50)
-                    .HasColumnName("A1-3");
-
-                entity.Property(e => e.A14)
-                    .HasMaxLength(50)
-                    .HasColumnName("A1-4");
-
-                entity.Property(e => e.A15)
-                    .HasMaxLength(50)
-                    .HasColumnName("A1-5");
-
-                entity.Property(e => e.A21)
-                    .HasMaxLength(50)
-                    .HasColumnName("A2-1");
-
-                entity.Property(e => e.A22)
-                    .HasMaxLength(50)
-                    .HasColumnName("A2-2");
-
-                entity.Property(e => e.A23)
-                    .HasMaxLength(50)
-                    .HasColumnName("A2-3");
-
-                entity.Property(e => e.A24)
-                    .HasMaxLength(50)
-                    .HasColumnName("A2-4");
-
-                entity.Property(e => e.A25)
-                    .HasMaxLength(50)
-                    .HasColumnName("A2-5");
-
-                entity.Property(e => e.A31)
-                    .HasMaxLength(50)
-                    .HasColumnName("A3-1");
-
-                entity.Property(e => e.A32)
-                    .HasMaxLength(50)
-                    .HasColumnName("A3-2");
-
-                entity.Property(e => e.A33)
-                    .HasMaxLength(50)
-                    .HasColumnName("A3-3");
-
-                entity.Property(e => e.A34)
-                    .HasMaxLength(50)
-                    .HasColumnName("A3-4");
-
-                entity.Property(e => e.A35)
-                    .HasMaxLength(50)
-                    .HasColumnName("A3-5");
-
-                entity.Property(e => e.A36)
-                    .HasMaxLength(50)
-                    .HasColumnName("A3-6");
-
-                entity.Property(e => e.A37)
-                    .HasMaxLength(50)
-                    .HasColumnName("A3-7");
-
-                entity.Property(e => e.A41)
-                    .HasMaxLength(50)
-                    .HasColumnName("A4-1");
-
-                entity.Property(e => e.A42)
-                    .HasMaxLength(50)
-                    .HasColumnName("A4-2");
-
-                entity.Property(e => e.A43)
-                    .HasMaxLength(50)
-                    .HasColumnName("A4-3");
-
-                entity.Property(e => e.A44)
-                    .HasMaxLength(50)
-                    .HasColumnName("A4-4");
-
-                entity.Property(e => e.A51)
-                    .HasMaxLength(50)
-                    .HasColumnName("A5-1");
-
-                entity.Property(e => e.A52)
-                    .HasMaxLength(50)
-                    .HasColumnName("A5-2");
-
-                entity.Property(e => e.A53)
-                    .HasMaxLength(50)
-                    .HasColumnName("A5-3");
-
-                entity.Property(e => e.A54)
-                    .HasMaxLength(50)
-                    .HasColumnName("A5-4");
-
-                entity.Property(e => e.A61)
-                    .HasMaxLength(50)
-                    .HasColumnName("A6-1");
-
-                entity.Property(e => e.A62)
-                    .HasMaxLength(50)
-                    .HasColumnName("A6-2");
-
-                entity.Property(e => e.A63)
-                    .HasMaxLength(50)
-                    .HasColumnName("A6-3");
-
-                entity.Property(e => e.A64)
-                    .HasMaxLength(50)
-                    .HasColumnName("A6-4");
-
-                entity.Property(e => e.A65)
-                    .HasMaxLength(50)
-                    .HasColumnName("A6-5");
-
-                entity.Property(e => e.A71)
-                    .HasMaxLength(50)
-                    .HasColumnName("A7-1");
-
-                entity.Property(e => e.A72)
-                    .HasMaxLength(50)
-                    .HasColumnName("A7-2");
-
-                entity.Property(e => e.A73)
-                    .HasMaxLength(50)
-                    .HasColumnName("A7-3");
-
-                entity.Property(e => e.A74)
-                    .HasMaxLength(50)
-                    .HasColumnName("A7-4");
-
-                entity.Property(e => e.A75)
-                    .HasMaxLength(50)
-                    .HasColumnName("A7-5");
-
-                entity.Property(e => e.Q1).HasMaxLength(50);
-
-                entity.Property(e => e.Q2).HasMaxLength(50);
-
-                entity.Property(e => e.Q3).HasMaxLength(50);
-
-                entity.Property(e => e.Q4).HasMaxLength(50);
-
-                entity.Property(e => e.Q5).HasMaxLength(50);
-
-                entity.Property(e => e.Q6).HasMaxLength(50);
-
-                entity.Property(e => e.Q7).HasMaxLength(50);
             });
 
             modelBuilder.Entity<Roasting>(entity =>
@@ -828,6 +551,8 @@ namespace prjAdmin.Models
                 entity.Property(e => e.ShoppingCarDetialsId).HasColumnName("ShoppingCarDetialsID");
 
                 entity.Property(e => e.MemberId).HasColumnName("MemberID");
+
+                entity.Property(e => e.Price).HasColumnType("money");
 
                 entity.Property(e => e.ProductsId).HasColumnName("ProductsID");
 

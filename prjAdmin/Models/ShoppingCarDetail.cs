@@ -11,6 +11,7 @@ namespace prjAdmin.Models
         public int MemberId { get; set; }
         public int? ProductsId { get; set; }
         public int? Quantity { get; set; }
+        public decimal? Price { get; set; }
 
         public virtual ShoppingCar Member { get; set; }
         public virtual Product Products { get; set; }

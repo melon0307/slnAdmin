@@ -7,15 +7,10 @@ namespace prjAdmin.Models
 {
     public partial class Photo
     {
-        public Photo()
-        {
-            PhotoDetails = new HashSet<PhotoDetail>();
-        }
-
         public int PhotoId { get; set; }
-        public byte[] Photo1 { get; set; }
-        public string PhotoName { get; set; }
+        public int? ProductId { get; set; }
+        public string ImagePath { get; set; }
 
-        public virtual ICollection<PhotoDetail> PhotoDetails { get; set; }
+        public virtual Product Product { get; set; }
     }
 }

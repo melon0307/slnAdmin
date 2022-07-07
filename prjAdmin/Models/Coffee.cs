@@ -14,10 +14,8 @@ namespace prjAdmin.Models
         public int RoastingId { get; set; }
         public int ProcessId { get; set; }
         public int PackageId { get; set; }
-        public int? ConstellationId { get; set; }
         public bool RainForest { get; set; }
 
-        public virtual Constellation Constellation { get; set; }
         public virtual Country Country { get; set; }
         public virtual Package Package { get; set; }
         public virtual Process Process { get; set; }

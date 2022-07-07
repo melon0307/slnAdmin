@@ -79,6 +79,14 @@ namespace prjAdmin.Controllers
             prod.Stock = p.Stock;
             prod.TakeDown = p.TakeDown;
 
+            // 新增產品圖片
+            if (p.photo != null)
+            {
+                string pName = Guid.NewGuid().ToString() + ".jpg";
+                p.photo.CopyTo(new FileStream(_environment.WebRootPath + "/Images/" + pName, FileMode.Create));
+                prod.MainPhotoPath = pName; 
+            }
+
             _context.Products.Add(prod);
             _context.SaveChanges();
 
@@ -96,32 +104,11 @@ namespace prjAdmin.Controllers
                     RoastingId = p.RoastingId,
                     PackageId = p.PackageId,
                     ProcessId = p.ProcessId,
-                    RainForest = p.RainForest,
-                    ConstellationId = p.ConstellationId
+                    RainForest = p.RainForest                    
                 };
                 _context.Coffees.Add(coffee);
                 _context.SaveChanges();
             }
-
-            // 新增產品圖片
-            if (p.photo != null)
-            {
-                string pName = Guid.NewGuid().ToString() + ".jpg";
-                p.photo.CopyTo(new FileStream(_environment.WebRootPath + "/Images/" + pName, FileMode.Create));
-                Photo photo = new Photo() { PhotoName = pName };
-                _context.Photos.Add(photo);
-                _context.SaveChanges();
-
-                int photoId = _context.Photos.AsEnumerable().Last().PhotoId;
-                PhotoDetail photoDetail = new PhotoDetail
-                {
-                    ProductId = productId,
-                    PhotoId = photoId
-                };
-                _context.PhotoDetails.Add(photoDetail);
-                _context.SaveChanges();
-            }
-
             return RedirectToAction("Index");
         }
 

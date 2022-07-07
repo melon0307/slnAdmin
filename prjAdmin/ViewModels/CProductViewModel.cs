@@ -29,8 +29,7 @@ namespace prjAdmin.ViewModels
         public double? Star { get; set; }
         public int RoastingId { get; set; }
         public int ProcessId { get; set; }
-        public int PackageId { get; set; }
-        public int? ConstellationId { get; set; }
+        public int PackageId { get; set; }        
         [DisplayName("是否加入雨林聯盟")]
         public bool RainForest { get; set; }
         public Category Category { get; set; }

@@ -12,7 +12,7 @@ namespace prjAdmin.Models
             Comments = new HashSet<Comment>();
             MyLikes = new HashSet<MyLike>();
             OrderDetails = new HashSet<OrderDetail>();
-            PhotoDetails = new HashSet<PhotoDetail>();
+            Photos = new HashSet<Photo>();
             ShoppingCarDetails = new HashSet<ShoppingCarDetail>();
         }
 
@@ -25,7 +25,8 @@ namespace prjAdmin.Models
         public int? Stock { get; set; }
         public int? ClickCount { get; set; }
         public bool TakeDown { get; set; }
-        public double? Star { get; set; }        
+        public double? Star { get; set; }
+        public string MainPhotoPath { get; set; }
 
         public virtual Category Category { get; set; }
         public virtual Country Country { get; set; }
@@ -33,7 +34,7 @@ namespace prjAdmin.Models
         public virtual ICollection<Comment> Comments { get; set; }
         public virtual ICollection<MyLike> MyLikes { get; set; }
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }
-        public virtual ICollection<PhotoDetail> PhotoDetails { get; set; }
+        public virtual ICollection<Photo> Photos { get; set; }
         public virtual ICollection<ShoppingCarDetail> ShoppingCarDetails { get; set; }
     }
 }

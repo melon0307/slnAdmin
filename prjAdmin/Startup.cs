@@ -30,6 +30,8 @@ namespace prjAdmin
                 options.UseSqlServer(Configuration.GetConnectionString("CoffeeConnection"));
             });
             services.AddControllersWithViews();
+            services.AddSession();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -47,6 +49,7 @@ namespace prjAdmin
             }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+            app.UseSession();
 
             app.UseRouting();
 
@@ -56,7 +59,7 @@ namespace prjAdmin
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Home}/{action=Signin}/{id?}");
             });
         }
     }

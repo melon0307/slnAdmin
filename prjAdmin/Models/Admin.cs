@@ -10,11 +10,10 @@ namespace prjAdmin.Models
         public int AdminId { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string Gender { get; set; }
-        public string Phone { get; set; }
-        public DateTime BirthDay { get; set; }
-        public string Address { get; set; }
+        public bool ProductOk { get; set; }
+        public bool OrderOk { get; set; }
+        public bool MemberOk { get; set; }
+        public bool ArticleOk { get; set; }
+        public bool AdminOk { get; set; }
     }
 }
