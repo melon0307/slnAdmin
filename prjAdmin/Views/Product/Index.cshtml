@@ -66,7 +66,7 @@
             foreach (var item in Model)
             {
                 count++;
-                <tr >
+                <tr>
                     <td class="col-md-1">
                         @count
                     </td>
@@ -79,7 +79,7 @@
                     <td class="col-md-1">
                         @Html.DisplayFor(modelItem => item.Country.CountryName)
                     </td>
-                    <td class="col-md-1">                        
+                    <td class="col-md-1">
                         $@Convert.ToInt32(item.Price).ToString(".")
                     </td>
                     <td class="col-md-2">
@@ -92,7 +92,16 @@
                         @Html.DisplayFor(modelItem => item.ClickCount)
                     </td>
                     <td class="col-md-1">
-                        @Html.DisplayFor(modelItem => item.TakeDown)
+                        @{
+                            if (item.TakeDown == false)
+                            {
+                                @:上架中
+                            }
+                            else
+                            {
+                                @:下架中
+                            }
+                        }                        
                     </td>
                     <td class="col-md-1">
                         @Html.DisplayFor(modelItem => item.Star)
@@ -104,7 +113,7 @@
                         <br />
                         @{ if (item.TakeDown == false)
                                 @Html.ActionLink("下架", "TakeDown", "Product", new { id = item.ProductId }, new { @class = "btn btn-sm btn-secondary", onclick = "return confirm('確認下架此產品?')" })
-                            else
+                                else
                                     @Html.ActionLink("上架", "Launch", "Product", new { id = item.ProductId }, new { @class = "btn btn-sm btn-success", onclick = "return confirm('確認上架此產品?')", id = "key" })
                         }
                     </td>
@@ -116,10 +125,10 @@
 @section Scripts{
     <script>
         let pro = document.querySelector("#product")
-            
+
         pro.classList.add("active")
 
-        $("#key").parents("tr").css("background-color","antiquewhite");
+        $("#key").parents("tr").css("background-color", "antiquewhite");
     </script>
 }
 
