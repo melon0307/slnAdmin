@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using prjAdmin.Models;
@@ -7,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 
@@ -16,6 +18,7 @@ namespace prjAdmin.Controllers
     {
         private readonly IWebHostEnvironment _environment;
         private readonly CoffeeContext _context;
+        private static Admin signIn_User;
 
         public ProductController(CoffeeContext context, IWebHostEnvironment host)
         {
@@ -25,42 +28,52 @@ namespace prjAdmin.Controllers
 
         public IActionResult Index(CKeywordViewModel vModel)
         {
-            IEnumerable<CProductViewModel> datas = null;
-            var list = _context.Products.Select(p => new CProductViewModel()
+            string JsonUser = "";
+            if (HttpContext.Session.Keys.Contains(CDictionary.SK_LOGINED_USER))
             {
-                ProductId = p.ProductId,
-                ProductName = p.ProductName,
-                Category = p.Category,
-                Country = p.Country,
-                Coffee = p.Coffee,
-                Price = p.Price,
-                Description = p.Description,
-                Stock = p.Stock,
-                ClickCount = p.ClickCount,
-                TakeDown = p.TakeDown,
-                Star = p.Star,
-                MainPhotoPath = p.MainPhotoPath
-            });
-
-
-            if (string.IsNullOrEmpty(vModel.txtKeyword)) // 若沒輸入關鍵字則回傳所有產品
-            {
-                datas = list;                
-            }
-            else
-            {
-                if (vModel.txtKeyword == "上架")  
-                    datas = list.Where(p => p.TakeDown == false); // 輸入上架回傳上架商品
-                else if (vModel.txtKeyword == "下架")
-                    datas = list.Where(p => p.TakeDown == true); // 輸入下架回傳下架商品
-                else
+                JsonUser = HttpContext.Session.GetString(CDictionary.SK_LOGINED_USER);
+                signIn_User = JsonSerializer.Deserialize<Admin>(JsonUser);
+                if (signIn_User.ProductOk)
                 {
-                    datas = list.Where(p => p.ProductName.Contains(vModel.txtKeyword) || // 依輸入關鍵字查詢類別, 國家, 產品名
-                                       p.Category.CategoriesName.Contains(vModel.txtKeyword) ||
-                                       p.Country.CountryName.Contains(vModel.txtKeyword));
-                }               
+                    IEnumerable<CProductViewModel> datas = null;
+                    var list = _context.Products.Select(p => new CProductViewModel()
+                    {
+                        ProductId = p.ProductId,
+                        ProductName = p.ProductName,
+                        Category = p.Category,
+                        Country = p.Country,
+                        Coffee = p.Coffee,
+                        Price = p.Price,
+                        Description = p.Description,
+                        Stock = p.Stock,
+                        ClickCount = p.ClickCount,
+                        TakeDown = p.TakeDown,
+                        Star = p.Star,
+                        MainPhotoPath = p.MainPhotoPath
+                    });
+
+
+                    if (string.IsNullOrEmpty(vModel.txtKeyword)) // 若沒輸入關鍵字則回傳所有產品
+                    {
+                        datas = list;
+                    }
+                    else
+                    {
+                        if (vModel.txtKeyword == "上架")
+                            datas = list.Where(p => p.TakeDown == false); // 輸入上架回傳上架商品
+                        else if (vModel.txtKeyword == "下架")
+                            datas = list.Where(p => p.TakeDown == true); // 輸入下架回傳下架商品
+                        else
+                        {
+                            datas = list.Where(p => p.ProductName.Contains(vModel.txtKeyword) || // 依輸入關鍵字查詢類別, 國家, 產品名
+                                               p.Category.CategoriesName.Contains(vModel.txtKeyword) ||
+                                               p.Country.CountryName.Contains(vModel.txtKeyword));
+                        }
+                    }
+                    return View(datas);
+                }
             }
-            return View(datas);            
+            return RedirectToAction("Index", "Dashboard");
         }
 
         [HttpGet]

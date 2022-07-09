@@ -18,7 +18,7 @@
             <h4 style="text-decoration:underline">產品基本資料</h4>
             <div class="form-group">
                 <label asp-for="ProductName" class="control-label"></label>
-                <input asp-for="ProductName" class="form-control" required/>
+                <input asp-for="ProductName" class="form-control" required />
                 <span asp-validation-for="ProductName" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -33,7 +33,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="Price" class="control-label"></label>
-                <input asp-for="Price" class="form-control" required/>
+                <input asp-for="Price" class="form-control" required />
                 <span asp-validation-for="Price" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -43,7 +43,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="Stock" class="control-label"></label>
-                <input asp-for="Stock" class="form-control" required/>
+                <input asp-for="Stock" class="form-control" required />
                 <span asp-validation-for="Stock" class="text-danger"></span>
             </div>
             <br />
@@ -57,11 +57,6 @@
             </div>
             <div class="form-group">
                 <input asp-for="Star" class="form-control" hidden />
-            </div>
-            <br />
-            <div class="custom-file ">
-                <label class="custom-file-label col-md-6" for="customFile">產品主要圖片</label>                
-                <input type="file" class="form-control col-md-6" id="customFile" name="photo" accept="image/*">
             </div>
             <br />
             <br />
@@ -94,13 +89,29 @@
                 </label>
             </div>
             <br />
+            <div class="custom-file ">
+                <label class="custom-file-label col-md-6" for="customFile">產品主要圖片</label>
+                <input type="file" class="form-control col-md-6" id="customFile" name="photo" accept="image/*">
+            </div>
+            <br />
+            <div class="custom-file ">
+                <img id="imgPrev" src="~/Images/新增產品預設圖.png" class="mainImg" />
+            </div>
         </div>
     </div>
 </form>
+@section Styles{
+    <style>
+        .mainImg {
+            max-width: 70em;
+            max-height: 15em;
+        }
+    </style>
+}
 
 @section Scripts {
     @*@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}*@
-<script>
+    <script>
         const selCategory = document.querySelector("#select1"),
               selCourtry = document.querySelector("#select2"),
               selPackage = document.querySelector("#select3"),
@@ -161,6 +172,19 @@
         });
     };
 
+    $("#customFile").change(function () {
+        readURL(this);
+    });
+
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (event) {
+                    $("#imgPrev").attr("src", event.target.result);
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
     @*fetch('@Url.Content("~/api/Category")').then(response => {
         return response.json();
     }).then(datas => {
@@ -178,5 +202,5 @@
             selCourtry.options.add(opt);
         });
     });*@
-</script>
+    </script>
 }

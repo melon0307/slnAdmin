@@ -15,8 +15,8 @@
         <div class="col-4">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <h4 style="text-decoration:underline">產品基本資料</h4>
-            <div class="form-group">                
-                <input asp-for="ProductId" class="form-control" hidden />                
+            <div class="form-group">
+                <input asp-for="ProductId" class="form-control" hidden />
             </div>
             <div class="form-group">
                 <label asp-for="ProductName" class="control-label"></label>
@@ -60,7 +60,6 @@
             <div class="form-group">
                 <input asp-for="Star" class="form-control" hidden />
             </div>
-
             <br />
             <br />
             <div class="form-group">
@@ -91,14 +90,14 @@
                     <input class="form-check-input" asp-for="RainForest" /> @Html.DisplayNameFor(model => model.RainForest)
                 </label>
             </div>
+            <br />
             <div class="custom-file ">
-                <br />
                 <label class="custom-file-label col-md-6" for="customFile">產品主要圖片</label>
                 <input type="file" class="form-control col-md-6" id="customFile" name="photo" accept="image/*">
             </div>
             <br />
             <div class="custom-file ">
-                <img id="imgPrev" src="~/Images/@Model.MainPhotoPath" class="mainImg"/>
+                <img id="imgPrev" src="~/Images/@Model.MainPhotoPath" class="mainImg" />
             </div>
         </div>
     </div>
@@ -106,28 +105,29 @@
 
 @section Styles{
     <style>
-        .mainImg{
-            max-width:70em;
-            max-height:15em;
+        .mainImg {
+            max-width: 70em;
+            max-height: 15em;
         }
     </style>
-            }
+}
+
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-<script>
-    $("#customFile").change(function() {        
-        readURL(this);
-    });
+    <script>
+        $("#customFile").change(function () {
+            readURL(this);
+        });
 
-    function readURL(input) {
-        if (input.files && input.files[0]) {
-            var reader = new FileReader();
-            reader.onload = function (event) {
-                $("#imgPrev").attr("src", event.target.result);
-            };
-            reader.readAsDataURL(input.files[0]);
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (event) {
+                    $("#imgPrev").attr("src", event.target.result);
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
         }
-    }
-</script>
+    </script>
 }
 

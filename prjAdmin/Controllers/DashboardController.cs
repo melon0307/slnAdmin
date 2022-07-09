@@ -12,8 +12,10 @@ namespace prjAdmin.Controllers
 {
     public class DashboardController : Controller
     {
-        public static Admin signin_user = null;
+        public static Admin signIn_user = null;
         private readonly CoffeeContext _context;
+        public static string btnSignInText = "登入";
+
         public DashboardController(CoffeeContext context)
         {
             _context = context;
@@ -27,6 +29,10 @@ namespace prjAdmin.Controllers
         [HttpGet]
         public IActionResult Signin()
         {
+            if (HttpContext.Session.Keys.Contains(CDictionary.SK_LOGINED_USER))
+            {
+                return RedirectToAction("Index", "Dashboard");
+            }
             return PartialView();
         }
 
@@ -40,11 +46,25 @@ namespace prjAdmin.Controllers
                 {
                     string JsonUser = JsonSerializer.Serialize(user); //user物件轉json
                     HttpContext.Session.SetString(CDictionary.SK_LOGINED_USER, JsonUser); //json放到session
-                    signin_user = JsonSerializer.Deserialize<Admin>(JsonUser);
+                    signIn_user = JsonSerializer.Deserialize<Admin>(JsonUser);
+                    btnSignInText = "登出";
                     return RedirectToAction("Index");
                 }
             }
             return View();
+        }
+
+        [HttpGet]
+        public IActionResult Signout()
+        {
+            if (HttpContext.Session.Keys.Contains(CDictionary.SK_LOGINED_USER))
+            {
+                HttpContext.Session.Remove(CDictionary.SK_LOGINED_USER);
+                signIn_user = null;
+                btnSignInText = "登入";                
+            }
+
+            return RedirectToAction("Index", "Dashboard");
         }
 
         [HttpGet]
