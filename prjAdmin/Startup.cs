@@ -59,7 +59,7 @@ namespace prjAdmin
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Signin}/{id?}");
+                    pattern: "{controller=Dashboard}/{action=Signin}/{id?}");
             });
         }
     }

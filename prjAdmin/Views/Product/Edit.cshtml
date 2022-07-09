@@ -1,0 +1,133 @@
+﻿@model prjAdmin.ViewModels.CProductViewModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1 class="h1" style="margin-top:0.5em">修改產品</h1>
+<div>
+    <a asp-action="Index" class="btn btn-secondary"><i class="fa-solid fa-arrow-left-long"></i> 返回產品列表</a>
+</div>
+<hr />
+<form asp-action="Edit" enctype="multipart/form-data">
+    <div style="display:flex">
+        <div style="width:2em"></div>
+        <div class="col-4">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <h4 style="text-decoration:underline">產品基本資料</h4>
+            <div class="form-group">                
+                <input asp-for="ProductId" class="form-control" hidden />                
+            </div>
+            <div class="form-group">
+                <label asp-for="ProductName" class="control-label"></label>
+                <input asp-for="ProductName" class="form-control" required />
+                <span asp-validation-for="ProductName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Category.CategoriesName" class="control-label"></label>
+                @Html.DropDownListFor(model => model.CategoryId, ViewBag.CateListItem as SelectList, new { @class = "form-control" })
+                <span asp-validation-for="CategoryId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Country.CountryName" class="control-label"></label>
+                @Html.DropDownListFor(model => model.CountryId, ViewBag.CtryListItem as SelectList, new { @class = "form-control" })
+                <span asp-validation-for="CountryId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Price" class="control-label"></label>
+                <input asp-for="Price" class="form-control" required />
+                <span asp-validation-for="Price" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <textarea asp-for="Description" class="form-control" rows="6" cols="40"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Stock" class="control-label"></label>
+                <input asp-for="Stock" class="form-control" required />
+                <span asp-validation-for="Stock" class="text-danger"></span>
+            </div>
+            <br />
+            <div class="form-group">
+                <input asp-for="ClickCount" class="form-control" hidden />
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="TakeDown" /> @Html.DisplayNameFor(model => model.TakeDown)
+                </label>
+            </div>
+            <div class="form-group">
+                <input asp-for="Star" class="form-control" hidden />
+            </div>
+
+            <br />
+            <br />
+            <div class="form-group">
+                <input type="submit" value="確認" class="btn btn-primary" />
+            </div>
+        </div>
+        <div style="width:5em"></div>
+        <div class="col-4">
+            <h4 style="text-decoration:underline">咖啡類詳細資料</h4>
+            <div class="form-group">
+                <label asp-for="Coffee.Package.PackageName" class="control-label"></label>
+                @Html.DropDownListFor(model => model.PackageId, ViewBag.PkgListItem as SelectList, new { @class = "form-control" })
+                <span asp-validation-for="PackageId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Coffee.Roasting.RoastingName" class="control-label"></label>
+                @Html.DropDownListFor(model => model.RoastingId, ViewBag.RoastListItem as SelectList, new { @class = "form-control" })
+                <span asp-validation-for="RoastingId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Coffee.Process.ProcessName" class="control-label"></label>
+                @Html.DropDownListFor(model => model.ProcessId, ViewBag.PrcsListItem as SelectList, new { @class = "form-control" })
+                <span asp-validation-for="ProcessId" class="text-danger"></span>
+            </div>
+            <br />
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="RainForest" /> @Html.DisplayNameFor(model => model.RainForest)
+                </label>
+            </div>
+            <div class="custom-file ">
+                <br />
+                <label class="custom-file-label col-md-6" for="customFile">產品主要圖片</label>
+                <input type="file" class="form-control col-md-6" id="customFile" name="photo" accept="image/*">
+            </div>
+            <br />
+            <div class="custom-file ">
+                <img id="imgPrev" src="~/Images/@Model.MainPhotoPath" class="mainImg"/>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Styles{
+    <style>
+        .mainImg{
+            max-width:70em;
+            max-height:15em;
+        }
+    </style>
+            }
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+<script>
+    $("#customFile").change(function() {        
+        readURL(this);
+    });
+
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (event) {
+                $("#imgPrev").attr("src", event.target.result);
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>
+}
+

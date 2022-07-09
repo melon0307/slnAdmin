@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 #nullable disable
 
@@ -14,6 +15,7 @@ namespace prjAdmin.Models
         public int RoastingId { get; set; }
         public int ProcessId { get; set; }
         public int PackageId { get; set; }
+        [DisplayName("樹蛙雨林聯盟")]
         public bool RainForest { get; set; }
 
         public virtual Country Country { get; set; }
