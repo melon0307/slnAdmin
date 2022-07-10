@@ -23,7 +23,7 @@ namespace prjAdmin.ViewModels
         public int? Stock { get; set; }
         [DisplayName("點擊數")]
         public int? ClickCount { get; set; }
-        [DisplayName("下架狀態")]
+        [DisplayName("產品狀態")]
         public bool TakeDown { get; set; }
         [DisplayName("產品評價")]
         public double? Star { get; set; }

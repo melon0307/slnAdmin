@@ -1,4 +1,4 @@
-﻿@model IEnumerable<prjAdmin.Models.Member>
+﻿@model IEnumerable<prjAdmin.ViewModels.CMemberViewModel>
 
 @{
     ViewData["Title"] = "Index";
@@ -22,67 +22,81 @@
     <table class="table-hover">
         <thead>
             <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.MemberId)
+                <th class="col-1">
+                    #
                 </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.MemberPhone)                    
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.MemberEmail)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.MemberAddress)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.MemberName)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.MemberBirthDay)
-                </th>
-                <th>
+                <th class="col-1" >
                     @Html.DisplayNameFor(model => model.MemberPhotoPath)
                 </th>
-                <th>
+                <th class="col-1" style="text-align:center">
+                    @Html.DisplayNameFor(model => model.MemberPhone)
+                </th>
+                <th class="col-1" style="text-align:center">
+                    @Html.DisplayNameFor(model => model.MemberName)                    
+                </th>
+                <th class="col-2" style="text-align:center">
+                    @Html.DisplayNameFor(model => model.MemberAddress)
+                </th>
+                <th class="col-2" style="text-align:center">
+                    @Html.DisplayNameFor(model => model.MemberEmail)
+                </th>
+                <th class="col-1" style="text-align:center">
+                    @Html.DisplayNameFor(model => model.MemberBirthDay)
+                </th>
+                <th class="col-2" style="text-align:center">
                     @Html.DisplayNameFor(model => model.BlackList)
                 </th>
-                <th></th>
+                <th class="col-1" style="text-align:center">操作</th>
             </tr>
         </thead>
         <tbody>
             @foreach (var item in Model)
             {
-                <tr>
-                    <td>                        
-                        @Html.DisplayFor(modelItem => item.MemberId)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.MemberPhone)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.MemberEmail)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.MemberAddress)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.MemberName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.MemberBirthDay)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.MemberPhotoPath)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.BlackList)
-                    </td>
-                    <td>
-                        @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                        @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                        @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-                    </td>
-                </tr>
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MemberId)
+                </td>
+                <td>
+                    <img src="~/Images/@item.MemberPhotoPath" />
+                </td>
+                <td style="text-align:center">
+                    @Html.DisplayFor(modelItem => item.MemberPhone)
+                </td>
+                <td style="text-align:center">
+                    @Html.DisplayFor(modelItem => item.MemberName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MemberAddress)
+                </td>
+                <td style="text-align:center">
+                    @Html.DisplayFor(modelItem => item.MemberEmail)                    
+                </td>
+                <td style="text-align:center">
+                    @Convert.ToDateTime(item.MemberBirthDay).ToString("yyyy/MM/dd")
+                </td>
+                <td style="text-align:center">
+                    @{
+                        if (item.BlackList == false)
+                        {
+                            @Html.Label("未停權", "未停權", new { style = "color:green;font-weight:bold" })
+                        }
+                        else
+                        {
+                            @Html.Label("停權中", "停權中", new { style = "color:red;font-weight:bold" })
+                        }
+                    }
+                </td>
+                <td class="col-md-1" style="text-align:center">
+                    @Html.ActionLink("消費紀錄", "Details", "Member", new { id = item.MemberId}, new { @class = "btn btn-sm btn-primary" })
+                    <br />
+                    <br />
+                    @{ if (item.BlackList == false)
+                            @Html.ActionLink("停權處理", "suspend", "Member", new { id = item.MemberId }, new { @class = "btn btn-sm btn-danger", onclick = "return confirm('確認要停權此會員嗎?')" })
+                            else
+                                @Html.ActionLink("重新啟用", "restart", "Member", new { id = item.MemberId }, new { @class = "btn btn-sm btn-success key", onclick = "return confirm('確認要解除此會員的停權嗎?')" })
+                    }
+                </td>
+            </tr>
             }
         </tbody>
     </table>
@@ -92,6 +106,6 @@
         let pro = document.querySelector("#member");
 
         pro.classList.add("active");
-
+        $(".key").parents("tr").css("background-color", "#FFFAF4");
     </script>
 }

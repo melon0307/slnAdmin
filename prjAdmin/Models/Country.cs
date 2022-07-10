@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 
 #nullable disable
 
@@ -15,7 +14,6 @@ namespace prjAdmin.Models
         }
 
         public int CountryId { get; set; }
-        [DisplayName("國家")]
         public string CountryName { get; set; }
         public int ContinentId { get; set; }
 

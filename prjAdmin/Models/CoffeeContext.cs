@@ -373,6 +373,11 @@ namespace prjAdmin.Models
 
                 entity.Property(e => e.PaymentId).HasColumnName("PaymentID");
 
+                entity.HasOne(d => d.Coupon)
+                    .WithMany(p => p.Orders)
+                    .HasForeignKey(d => d.CouponId)
+                    .HasConstraintName("FK_Orders_Coupon");
+
                 entity.HasOne(d => d.Member)
                     .WithMany(p => p.Orders)
                     .HasForeignKey(d => d.MemberId)

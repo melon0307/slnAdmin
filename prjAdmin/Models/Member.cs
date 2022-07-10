@@ -24,7 +24,7 @@ namespace prjAdmin.Models
         public string MemberName { get; set; }
         public DateTime MemberBirthDay { get; set; }
         public string MemberPhotoPath { get; set; }
-        public bool BlackList { get; set; }
+        public bool? BlackList { get; set; }
 
         public virtual ShoppingCar ShoppingCar { get; set; }
         public virtual ICollection<Comment> Comments { get; set; }
