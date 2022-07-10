@@ -57,12 +57,12 @@ namespace prjAdmin.Controllers
         [HttpGet]
         public IActionResult Signout()
         {
-            if (HttpContext.Session.Keys.Contains(CDictionary.SK_LOGINED_USER))
-            {
+            //if (HttpContext.Session.Keys.Contains(CDictionary.SK_LOGINED_USER))
+            // {
                 HttpContext.Session.Remove(CDictionary.SK_LOGINED_USER);
                 signIn_user = null;
                 btnSignInText = "登入";                
-            }
+            //}
 
             return RedirectToAction("Index", "Dashboard");
         }
