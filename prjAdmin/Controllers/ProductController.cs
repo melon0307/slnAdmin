@@ -27,11 +27,10 @@ namespace prjAdmin.Controllers
         }
 
         public IActionResult Index(CKeywordViewModel vModel)
-        {
-            string JsonUser = "";
+        {            
             if (HttpContext.Session.Keys.Contains(CDictionary.SK_LOGINED_USER))
             {
-                JsonUser = HttpContext.Session.GetString(CDictionary.SK_LOGINED_USER);
+                string JsonUser = HttpContext.Session.GetString(CDictionary.SK_LOGINED_USER);
                 signIn_User = JsonSerializer.Deserialize<Admin>(JsonUser);
                 if (signIn_User.ProductOk)
                 {
@@ -52,7 +51,6 @@ namespace prjAdmin.Controllers
                         MainPhotoPath = p.MainPhotoPath
                     });
 
-
                     if (string.IsNullOrEmpty(vModel.txtKeyword)) // 若沒輸入關鍵字則回傳所有產品
                     {
                         datas = list;
@@ -72,209 +70,296 @@ namespace prjAdmin.Controllers
                     }
                     return View(datas);
                 }
+
+                return RedirectToAction("Index", "Dashboard");
             }
+
+            DashboardController.btnSignInText = "登入";
             return RedirectToAction("Index", "Dashboard");
         }
 
         [HttpGet]
         public IActionResult Create()
         {
-            return View();
+            if (HttpContext.Session.Keys.Contains(CDictionary.SK_LOGINED_USER))
+            {
+                string JsonUser = HttpContext.Session.GetString(CDictionary.SK_LOGINED_USER);
+                signIn_User = JsonSerializer.Deserialize<Admin>(JsonUser);
+                if (signIn_User.ProductOk)
+                {
+                    return View();
+                }
+
+                return RedirectToAction("Index", "Dashboard");
+            }
+
+            DashboardController.btnSignInText = "登入";
+            return RedirectToAction("Index", "Dashboard");
         }
 
         [HttpPost]
         public IActionResult Create(CProductViewModel p)
         {
-            // 新增產品
-            Product prod = new Product();
-            prod.ProductName = p.ProductName;
-            prod.CategoryId = p.CategoryId;
-            prod.CountryId = p.CountryId;
-            prod.Price = p.Price;
-            prod.Description = p.Description;
-            prod.Stock = p.Stock;
-            prod.TakeDown = p.TakeDown;
-
-            // 新增產品圖片
-            if (p.photo != null)
+            if (HttpContext.Session.Keys.Contains(CDictionary.SK_LOGINED_USER))
             {
-                string pName = Guid.NewGuid().ToString() + ".jpg";
-                p.photo.CopyTo(new FileStream(_environment.WebRootPath + "/Images/" + pName, FileMode.Create));
-                prod.MainPhotoPath = pName; 
-            }
-
-            _context.Products.Add(prod);
-            _context.SaveChanges();
-
-            // 若新增的產品為咖啡類別，在咖啡資料表內新增該產品
-            int productId = _context.Products.AsEnumerable().Last().ProductId;
-            int coffeeCateId = _context.Categories.FirstOrDefault(c => c.CategoriesName == "咖啡").CategoryId;
-
-            if(p.CategoryId == coffeeCateId)
-            {
-                Coffee coffee = new Coffee()
+                string JsonUser = HttpContext.Session.GetString(CDictionary.SK_LOGINED_USER);
+                signIn_User = JsonSerializer.Deserialize<Admin>(JsonUser);
+                if (signIn_User.ProductOk)
                 {
-                    ProductId = productId,
-                    CoffeeName = p.ProductName,
-                    CountryId = (int)p.CountryId,
-                    RoastingId = p.RoastingId,
-                    PackageId = p.PackageId,
-                    ProcessId = p.ProcessId,
-                    RainForest = p.RainForest                    
-                };
-                _context.Coffees.Add(coffee);
-                _context.SaveChanges();
+                    // 新增產品
+                    Product prod = new Product();
+                    prod.ProductName = p.ProductName;
+                    prod.CategoryId = p.CategoryId;
+                    prod.CountryId = p.CountryId;
+                    prod.Price = p.Price;
+                    prod.Description = p.Description;
+                    prod.Stock = p.Stock;
+                    prod.TakeDown = p.TakeDown;
+
+                    // 新增產品圖片
+                    if (p.photo != null)
+                    {
+                        string pName = Guid.NewGuid().ToString() + ".jpg";
+                        p.photo.CopyTo(new FileStream(_environment.WebRootPath + "/Images/" + pName, FileMode.Create));
+                        prod.MainPhotoPath = pName;
+                    }
+
+                    _context.Products.Add(prod);
+                    _context.SaveChanges();
+
+                    // 若新增的產品為咖啡類別，在咖啡資料表內新增該產品
+                    int productId = _context.Products.AsEnumerable().Last().ProductId;
+                    int coffeeCateId = _context.Categories.FirstOrDefault(c => c.CategoriesName == "咖啡").CategoryId;
+
+                    if (p.CategoryId == coffeeCateId)
+                    {
+                        Coffee coffee = new Coffee()
+                        {
+                            ProductId = productId,
+                            CoffeeName = p.ProductName,
+                            CountryId = (int)p.CountryId,
+                            RoastingId = p.RoastingId,
+                            PackageId = p.PackageId,
+                            ProcessId = p.ProcessId,
+                            RainForest = p.RainForest
+                        };
+
+                        _context.Coffees.Add(coffee);
+                        _context.SaveChanges();
+                    }
+
+                    return RedirectToAction("Index");
+                }
+
+                return RedirectToAction("Index", "Dashboard");
             }
-            return RedirectToAction("Index");
+
+            DashboardController.btnSignInText = "登入";
+            return RedirectToAction("Index", "Dashboard");
         }
 
         public IActionResult TakeDown(int id)
         {
-            Product p = _context.Products.Find(id);
-            p.TakeDown = true;
-            _context.SaveChanges();
-            return RedirectToAction("Index");
+            if (HttpContext.Session.Keys.Contains(CDictionary.SK_LOGINED_USER))
+            {
+                string JsonUser = HttpContext.Session.GetString(CDictionary.SK_LOGINED_USER);
+                signIn_User = JsonSerializer.Deserialize<Admin>(JsonUser);
+                if (signIn_User.ProductOk)
+                {
+                    Product p = _context.Products.Find(id);
+                    p.TakeDown = true;
+                    _context.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+
+                return RedirectToAction("Index", "Dashboard");
+            }
+
+            DashboardController.btnSignInText = "登入";
+            return RedirectToAction("Index", "Dashboard");
         }
 
         public IActionResult Launch(int id)
         {
-            Product p = _context.Products.Find(id);
-            p.TakeDown = false;
-            _context.SaveChanges();
-            return RedirectToAction("Index");
+            if (HttpContext.Session.Keys.Contains(CDictionary.SK_LOGINED_USER))
+            {
+                string JsonUser = HttpContext.Session.GetString(CDictionary.SK_LOGINED_USER);
+                signIn_User = JsonSerializer.Deserialize<Admin>(JsonUser);
+                if (signIn_User.ProductOk)
+                {
+                    Product p = _context.Products.Find(id);
+                    p.TakeDown = false;
+                    _context.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+
+                return RedirectToAction("Index", "Dashboard");
+            }
+
+            DashboardController.btnSignInText = "登入";
+            return RedirectToAction("Index", "Dashboard");
         }
 
         [HttpGet]
         public IActionResult Edit(int? id)
         {
-            List<CProductViewModel> prod = null;
-            if (_context.Coffees.Any(c => c.ProductId == id))
+            if (HttpContext.Session.Keys.Contains(CDictionary.SK_LOGINED_USER))
             {
-                prod = _context.Products.Where(p => p.ProductId == id).Select(p => new CProductViewModel()
+                string JsonUser = HttpContext.Session.GetString(CDictionary.SK_LOGINED_USER);
+                signIn_User = JsonSerializer.Deserialize<Admin>(JsonUser);
+                if (signIn_User.ProductOk)
                 {
-                    ProductId = p.ProductId,
-                    ProductName = p.ProductName,
-                    CategoryId = p.CategoryId,
-                    CountryId = p.CountryId,
-                    Coffee = p.Coffee,
-                    PackageId = p.Coffee.PackageId,
-                    ProcessId = p.Coffee.ProductId,
-                    RoastingId = p.Coffee.RoastingId,
-                    RainForest = p.Coffee.RainForest,
-                    Price = p.Price,
-                    Description = p.Description,
-                    Stock = p.Stock,
-                    ClickCount = p.ClickCount,
-                    TakeDown = p.TakeDown,
-                    Star = p.Star,
-                    MainPhotoPath = p.MainPhotoPath
-                }).ToList();
-            }
-            else
-            {
-                prod = _context.Products.Where(p => p.ProductId == id).Select(p => new CProductViewModel()
-                {
-                    ProductId = p.ProductId,
-                    ProductName = p.ProductName,
-                    CategoryId = p.CategoryId,
-                    CountryId = p.CountryId,
-                    Coffee = p.Coffee,                    
-                    Price = p.Price,
-                    Description = p.Description,
-                    Stock = p.Stock,
-                    ClickCount = p.ClickCount,
-                    TakeDown = p.TakeDown,
-                    Star = p.Star,
-                    MainPhotoPath = p.MainPhotoPath
-                }).ToList();
-            }            
+                    List<CProductViewModel> prod = null;
+                    if (_context.Coffees.Any(c => c.ProductId == id))
+                    {
+                        prod = _context.Products.Where(p => p.ProductId == id).Select(p => new CProductViewModel()
+                        {
+                            ProductId = p.ProductId,
+                            ProductName = p.ProductName,
+                            CategoryId = p.CategoryId,
+                            CountryId = p.CountryId,
+                            Coffee = p.Coffee,
+                            PackageId = p.Coffee.PackageId,
+                            ProcessId = p.Coffee.ProductId,
+                            RoastingId = p.Coffee.RoastingId,
+                            RainForest = p.Coffee.RainForest,
+                            Price = p.Price,
+                            Description = p.Description,
+                            Stock = p.Stock,
+                            ClickCount = p.ClickCount,
+                            TakeDown = p.TakeDown,
+                            Star = p.Star,
+                            MainPhotoPath = p.MainPhotoPath
+                        })
+                            .ToList();
+                    }
+                    else
+                    {
+                        prod = _context.Products.Where(p => p.ProductId == id).Select(p => new CProductViewModel()
+                        {
+                            ProductId = p.ProductId,
+                            ProductName = p.ProductName,
+                            CategoryId = p.CategoryId,
+                            CountryId = p.CountryId,
+                            Coffee = p.Coffee,
+                            Price = p.Price,
+                            Description = p.Description,
+                            Stock = p.Stock,
+                            ClickCount = p.ClickCount,
+                            TakeDown = p.TakeDown,
+                            Star = p.Star,
+                            MainPhotoPath = p.MainPhotoPath
+                        })
+                            .ToList();
+                    }
 
-            var lstCatrgory = _context.Categories.ToList();
-            var lstCountry = _context.Countries.ToList();
-            var lstPackage = _context.Packages.ToList();
-            var lstProcess = _context.Processes.ToList();
-            var lstRoasting = _context.Roastings.ToList();
-            
-            ViewBag.CateListItem = CSelectList.ToSelectList(lstCatrgory);
-            ViewBag.CtryListItem = CSelectList.ToSelectList(lstCountry);
-            ViewBag.PkgListItem = CSelectList.ToSelectList(lstPackage);
-            ViewBag.PrcsListItem = CSelectList.ToSelectList(lstProcess);
-            ViewBag.RoastListItem = CSelectList.ToSelectList(lstRoasting);
-            
-            if (prod.Count == 0)
-                return RedirectToAction("Index");
-            return View(prod[0]);
+                    var lstCatrgory = _context.Categories.ToList();
+                    var lstCountry = _context.Countries.ToList();
+                    var lstPackage = _context.Packages.ToList();
+                    var lstProcess = _context.Processes.ToList();
+                    var lstRoasting = _context.Roastings.ToList();
+
+                    ViewBag.CateListItem = CSelectList.ToSelectList(lstCatrgory);
+                    ViewBag.CtryListItem = CSelectList.ToSelectList(lstCountry);
+                    ViewBag.PkgListItem = CSelectList.ToSelectList(lstPackage);
+                    ViewBag.PrcsListItem = CSelectList.ToSelectList(lstProcess);
+                    ViewBag.RoastListItem = CSelectList.ToSelectList(lstRoasting);
+
+                    if (prod.Count == 0)
+                        return RedirectToAction("Index");
+                    return View(prod[0]);
+                }
+
+                return RedirectToAction("Index", "Dashboard");
+            }
+
+            DashboardController.btnSignInText = "登入";
+            return RedirectToAction("Index", "Dashboard");
         }
 
         [HttpPost]
         public IActionResult Edit(CProductViewModel p)
         {
-            // 修改產品
-            Product prod = _context.Products.Find(p.ProductId);
-            if (prod != null)
+            if (HttpContext.Session.Keys.Contains(CDictionary.SK_LOGINED_USER))
             {
-                if (p.photo != null)
+                string JsonUser = HttpContext.Session.GetString(CDictionary.SK_LOGINED_USER);
+                signIn_User = JsonSerializer.Deserialize<Admin>(JsonUser);
+                if (signIn_User.ProductOk)
                 {
-                    string pName = Guid.NewGuid().ToString() + ".jpg";
-                    p.photo.CopyTo(new FileStream(_environment.WebRootPath + "/Images/" + pName, FileMode.Create));
-                    prod.MainPhotoPath = pName;
-                }
-                prod.ProductName = p.ProductName;
-                prod.CategoryId = p.CategoryId;
-                prod.CountryId = p.CountryId;
-                prod.Price = p.Price;
-                prod.Description = p.Description;
-                prod.Stock = p.Stock;
-                prod.TakeDown = p.TakeDown; 
-            };
-
-            _context.SaveChanges();
-            
-            // 假如產品修改類別為咖啡
-            int coffeeCateId = _context.Categories.FirstOrDefault(c => c.CategoriesName == "咖啡").CategoryId;
-
-            if (p.CategoryId == coffeeCateId)
-            {
-                // 若產品原本不是咖啡類別，在咖啡資料表內新增該產品
-                Coffee product = _context.Coffees.FirstOrDefault(c => c.ProductId == p.ProductId);
-                if (product == null)
-                {                    
-                    _context.Coffees.Add(new Coffee()
+                    // 修改產品
+                    Product prod = _context.Products.Find(p.ProductId);
+                    if (prod != null)
                     {
-                        ProductId = p.ProductId,
-                        CoffeeName = p.ProductName,
-                        PackageId = p.PackageId,
-                        ProcessId = p.ProcessId,
-                        RoastingId = p.RoastingId,
-                        RainForest = p.RainForest,
-                        CountryId = (int)p.CountryId
-                    });                    
-                }
-                else{
-                    // 若產品原本就是咖啡類別，更新產品資料
-                    product.CoffeeName = p.ProductName;
-                    product.PackageId = p.PackageId;
-                    product.ProcessId = p.ProcessId;
-                    product.RoastingId = p.RoastingId;
-                    product.RainForest = p.RainForest;
-                    product.CountryId = (int)p.CountryId;
-                }
+                        if (p.photo != null)
+                        {
+                            string pName = Guid.NewGuid().ToString() + ".jpg";
+                            p.photo.CopyTo(new FileStream(_environment.WebRootPath + "/Images/" + pName, FileMode.Create));
+                            prod.MainPhotoPath = pName;
+                        }
+                        prod.ProductName = p.ProductName;
+                        prod.CategoryId = p.CategoryId;
+                        prod.CountryId = p.CountryId;
+                        prod.Price = p.Price;
+                        prod.Description = p.Description;
+                        prod.Stock = p.Stock;
+                        prod.TakeDown = p.TakeDown;
+                    };
 
-                _context.SaveChanges();
-            }
-            else
-            {
-                // 若產品類別不是咖啡，且在咖啡資料表內找到該產品
-                Coffee coffee = _context.Coffees.FirstOrDefault(c => c.ProductId == p.ProductId);                
-                if(coffee != null)
-                {
-                    // 在咖啡資料表中刪除該產品
-                    _context.Coffees.Remove(coffee);
                     _context.SaveChanges();
+
+                    // 假如產品修改類別為咖啡
+                    int coffeeCateId = _context.Categories.FirstOrDefault(c => c.CategoriesName == "咖啡").CategoryId;
+
+                    if (p.CategoryId == coffeeCateId)
+                    {
+                        // 若產品原本不是咖啡類別，在咖啡資料表內新增該產品
+                        Coffee product = _context.Coffees.FirstOrDefault(c => c.ProductId == p.ProductId);
+                        if (product == null)
+                        {
+                            _context.Coffees.Add(new Coffee()
+                            {
+                                ProductId = p.ProductId,
+                                CoffeeName = p.ProductName,
+                                PackageId = p.PackageId,
+                                ProcessId = p.ProcessId,
+                                RoastingId = p.RoastingId,
+                                RainForest = p.RainForest,
+                                CountryId = (int)p.CountryId
+                            });
+                        }
+                        else
+                        {
+                            // 若產品原本就是咖啡類別，更新產品資料
+                            product.CoffeeName = p.ProductName;
+                            product.PackageId = p.PackageId;
+                            product.ProcessId = p.ProcessId;
+                            product.RoastingId = p.RoastingId;
+                            product.RainForest = p.RainForest;
+                            product.CountryId = (int)p.CountryId;
+                        }
+
+                        _context.SaveChanges();
+                    }
+                    else
+                    {
+                        // 若產品類別不是咖啡，且在咖啡資料表內找到該產品
+                        Coffee coffee = _context.Coffees.FirstOrDefault(c => c.ProductId == p.ProductId);
+                        if (coffee != null)
+                        {
+                            // 在咖啡資料表中刪除該產品
+                            _context.Coffees.Remove(coffee);
+                            _context.SaveChanges();
+                        }
+                    }
+
+                    return RedirectToAction("Index");
                 }
+
+                return RedirectToAction("Index", "Dashboard");
             }
 
-            return RedirectToAction("Index");
+            DashboardController.btnSignInText = "登入";
+            return RedirectToAction("Index", "Dashboard");
         }
     }
 }

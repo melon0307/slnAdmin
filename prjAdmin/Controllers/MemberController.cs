@@ -24,11 +24,10 @@ namespace prjAdmin.Controllers
         }
 
         public IActionResult Index(CKeywordViewModel vModel)
-        {
-            string JsonUser = "";
+        {            
             if (HttpContext.Session.Keys.Contains(CDictionary.SK_LOGINED_USER))
             {
-                JsonUser = HttpContext.Session.GetString(CDictionary.SK_LOGINED_USER);
+                string JsonUser = HttpContext.Session.GetString(CDictionary.SK_LOGINED_USER);
                 signIn_User = JsonSerializer.Deserialize<Admin>(JsonUser);
                 if (signIn_User.MemberOk)
                 {
@@ -41,8 +40,7 @@ namespace prjAdmin.Controllers
                             CMemberViewModel MemVModel = new CMemberViewModel();
                             MemVModel.member = m;
                             list.Add(MemVModel);
-                        }
-                        
+                        }                        
                     }
                     else
                     {
@@ -53,8 +51,7 @@ namespace prjAdmin.Controllers
                                 CMemberViewModel MemVModel = new CMemberViewModel();
                                 MemVModel.member = m;
                                 list.Add(MemVModel);
-                            } 
-                            
+                            }                             
                         }                            
                         else if (vModel.txtKeyword == "已停權") // 輸入已停權回傳已停權的會員
                         {
@@ -63,8 +60,7 @@ namespace prjAdmin.Controllers
                                 CMemberViewModel MemVModel = new CMemberViewModel();
                                 MemVModel.member = m;
                                 list.Add(MemVModel);
-                            }
-                            
+                            }                            
                         }                        
                         else if (vModel.txtKeyword.StartsWith("#"))
                         {
@@ -74,8 +70,7 @@ namespace prjAdmin.Controllers
                                 CMemberViewModel MemVModel = new CMemberViewModel();
                                 MemVModel.member = m;
                                 list.Add(MemVModel);
-                            }
-                            
+                            }                            
                         }
                         else
                         {
@@ -87,53 +82,98 @@ namespace prjAdmin.Controllers
                                 CMemberViewModel MemVModel = new CMemberViewModel();
                                 MemVModel.member = m;
                                 list.Add(MemVModel);
-                            }
-                            
+                            }                            
                         }
                     }
+
                     return View(list);
                 }
+
+                return RedirectToAction("Index", "Dashboard");
             }
+
+            DashboardController.btnSignInText = "登入";
             return RedirectToAction("Index", "Dashboard");
         }
 
         public IActionResult suspend(int id)
         {
-            Member m = _context.Members.Find(id);
-            m.BlackList = true;
-            _context.SaveChanges();
-            return RedirectToAction("Index");
+            
+            if (HttpContext.Session.Keys.Contains(CDictionary.SK_LOGINED_USER))
+            {                
+                string JsonUser = HttpContext.Session.GetString(CDictionary.SK_LOGINED_USER);
+                signIn_User = JsonSerializer.Deserialize<Admin>(JsonUser);
+                if (signIn_User.MemberOk)
+                {
+                    Member m = _context.Members.Find(id);
+                    m.BlackList = true;
+                    _context.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+
+                return RedirectToAction("Index", "Dashboard");
+            }
+
+            DashboardController.btnSignInText = "登入";
+            return RedirectToAction("Index", "Dashboard");
         }
 
         public IActionResult restart(int id)
         {
-            Member m = _context.Members.Find(id);
-            m.BlackList = false;
-            _context.SaveChanges();
-            return RedirectToAction("Index");
+            if (HttpContext.Session.Keys.Contains(CDictionary.SK_LOGINED_USER))
+            {
+                string JsonUser = HttpContext.Session.GetString(CDictionary.SK_LOGINED_USER);
+                signIn_User = JsonSerializer.Deserialize<Admin>(JsonUser);
+                if (signIn_User.MemberOk)
+                {
+                    Member m = _context.Members.Find(id);
+                    m.BlackList = false;
+                    _context.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+
+                return RedirectToAction("Index", "Dashboard");
+            }
+
+            DashboardController.btnSignInText = "登入";
+            return RedirectToAction("Index", "Dashboard");
         }
 
         public IActionResult Details(int? id)
         {
-            CMemberDetailsViewModel modelDetails = new CMemberDetailsViewModel();
-            CMemberViewModel model = new CMemberViewModel();
-            model.member = _context.Members.Find(id);
-            if (model.member == null)
+            if (HttpContext.Session.Keys.Contains(CDictionary.SK_LOGINED_USER))
             {
-                return RedirectToAction("Index");
-            }
-            modelDetails.member = model;
-            var list = _context.Orders.Where(o => o.MemberId == id).Select(o => new COrderViewModel()
-            {
-                order = o,
-                Payment=o.Payment,
-                Coupon=o.Coupon,
-                OrderState=o.OrderState
-            })
-                .ToList();
+                string JsonUser = HttpContext.Session.GetString(CDictionary.SK_LOGINED_USER);
+                signIn_User = JsonSerializer.Deserialize<Admin>(JsonUser);
+                if (signIn_User.MemberOk)
+                {
+                    CMemberDetailsViewModel modelDetails = new CMemberDetailsViewModel();
+                    CMemberViewModel model = new CMemberViewModel();
+                    model.member = _context.Members.Find(id);
+                    if (model.member == null)
+                    {
+                        return RedirectToAction("Index");
+                    }
 
-            modelDetails.order = list;            
-            return View(modelDetails);
+                    modelDetails.member = model;
+                    var list = _context.Orders.Where(o => o.MemberId == id).Select(o => new COrderViewModel()
+                    {
+                        order = o,
+                        Payment = o.Payment,
+                        Coupon = o.Coupon,
+                        OrderState = o.OrderState
+                    })
+                        .ToList();
+
+                    modelDetails.order = list;
+                    return View(modelDetails);
+                }
+
+                return RedirectToAction("Index", "Dashboard");
+            }
+
+            DashboardController.btnSignInText = "登入";
+            return RedirectToAction("Index", "Dashboard");
         }
     }
 }
