@@ -15,6 +15,7 @@ namespace prjAdmin.Controllers
         public static Admin signIn_user = null;
         private readonly CoffeeContext _context;
         public static string btnSignInText = "登入";
+        public static string randomCode;
 
         public DashboardController(CoffeeContext context)
         {
@@ -39,18 +40,22 @@ namespace prjAdmin.Controllers
         [HttpPost]
         public IActionResult Signin(CLoginViewModel vModel)
         {
-            var user = _context.Admins.FirstOrDefault(a => a.Email == vModel.txtAccount);
-            if(user != null)
+            if(vModel.Captcha.ToLower() == randomCode)
             {
-                if (user.Password.Equals(vModel.txtPassword))
+                var user = _context.Admins.FirstOrDefault(a => a.Email == vModel.txtAccount);
+                if (user != null)
                 {
-                    string JsonUser = JsonSerializer.Serialize(user); //user物件轉json
-                    HttpContext.Session.SetString(CDictionary.SK_LOGINED_USER, JsonUser); //json放到session
-                    signIn_user = JsonSerializer.Deserialize<Admin>(JsonUser);
-                    btnSignInText = "登出";
-                    return RedirectToAction("Index");
-                }
+                    if (user.Password.Equals(vModel.txtPassword))
+                    {
+                        string JsonUser = JsonSerializer.Serialize(user); //user物件轉json
+                        HttpContext.Session.SetString(CDictionary.SK_LOGINED_USER, JsonUser); //json放到session
+                        signIn_user = JsonSerializer.Deserialize<Admin>(JsonUser);
+                        btnSignInText = "登出";
+                        return RedirectToAction("Index");
+                    }
+                }                
             }
+
             return PartialView();
         }
 
@@ -67,6 +72,13 @@ namespace prjAdmin.Controllers
             return RedirectToAction("Index", "Dashboard");
         }
 
+        public IActionResult GetCaptcha()
+        {
+            randomCode = CCaptcha.CreateRandomCode(5).ToLower();
+            byte[] captcha = CCaptcha.CreatImage(randomCode);
+            return File(captcha, "image/jpeg");
+        }
+
         [HttpGet]
         public IActionResult Signup()
         {
@@ -75,10 +87,10 @@ namespace prjAdmin.Controllers
 
         [HttpPost]
         public IActionResult Signup(Admin user)
-        {
+        {            
             _context.Admins.Add(user);
             _context.SaveChanges();
-            return RedirectToAction("Index");
+            return RedirectToAction("Signin");
         }
     }
 }

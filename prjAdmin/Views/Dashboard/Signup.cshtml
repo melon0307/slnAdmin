@@ -67,13 +67,13 @@
                             返回登入
                         </a>
                     </p>*@
-                <div class="row justify-content-center form-bg-image" data-background-lg="../../assets/img/illustrations/signin.png">
+                <div class="row justify-content-center form-bg-image" id="backgdimg">
                     <div class="col-12 d-flex align-items-center justify-content-center">
                         <div class="bg-white shadow border-0 rounded border-light p-4 p-lg-5 w-100 fmxw-500">
                             <div class="text-center text-md-center mb-4 mt-md-0">
                                 <h1 class="mb-0 h3">管理員註冊</h1>
                             </div>
-                            <form action="#" class="mt-4">
+                            <form asp-action="Signup" enctype="multipart/form-data" class="mt-4">
                                 <!-- Form -->
                                 <div class="form-group mb-1 ">
                                     <label for="email">Email</label>
@@ -94,7 +94,7 @@
                                             <span class="input-group-text" id="basic-addon2">
                                                 <svg class="icon icon-xs text-gray-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"></path></svg>
                                             </span>
-                                            <input type="password" class="form-control" id="password" name="Password" placeholder="需含大小寫英數字符號，且長度不得小於8" pattern=".*[0-9a-zA-Z].{8,50}" required>
+                                            <input type="password" class="form-control" id="password" name="Password" placeholder="需含大小寫英數字，且最少8個字" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{6,}$" required>
                                             <input type="hidden" name="ProductOK" />
                                             <input type="hidden" name="MemberOK" />
                                             <input type="hidden" name="OrderOK" />
@@ -124,7 +124,7 @@
                                     <!-- End of Form -->
                                 </div>
                                 <div class="d-grid">
-                                    <button type="submit" class="btn btn-gray-800" style="font-weight:bold">註冊</button>
+                                    <input type="submit" class="btn btn-gray-800" style="font-weight:bold" value="註冊" id="submit"/>
                                 </div>
                             </form>
                             <div class="d-flex justify-content-center align-items-center mt-4">
@@ -194,9 +194,24 @@
         inputCkPW = $("#confirm_password"),
         warnCkPW = $("#warnConfirmPW"),
         eyeclick1 = false,
-        eyeclick2 = false;
+        eyeclick2 = false,
+        flagEmail = false,
+        flagPsd = false,
+        flagCfmPsd = false,
+        div = document.querySelector("#backgdimg");
 
-    $("#btneye1").click(function () {        
+    function check() {
+        if (flagCfmPsd && flagEmail && flagPsd) {
+            $("#submit").attr("type", "submit");
+        }
+        else {
+            $("#submit").attr("type", "button");
+        }
+    };
+
+    div.style.backgroundImage = "url('@Url.Content("~/assets/img/illustrations/signin.png")')";
+
+    $("#btneye1").click(function () {
         eyeclick1 = !eyeclick1;
         if (eyeclick1) {
             $("#btneye1").html('<i class="fa-solid fa-eye"></i>');
@@ -208,7 +223,7 @@
         }
     })
 
-    $("#btneye2").click(function () {        
+    $("#btneye2").click(function () {
         eyeclick2 = !eyeclick2;
         if (eyeclick2) {
             $("#btneye2").html('<i class="fa-solid fa-eye"></i>');
@@ -234,35 +249,48 @@
 
     inputEmail.blur(async () => {
         if (inputEmail.val().trim() == "") {
-            EmptyWarn(warnEmail, "Email")
+            EmptyWarn(warnEmail, "Email");
+            flagEmail = false;
         }
         else {
             const response = await fetch('@Url.Content("~/Api/IfEmailExist")' + `?Email=${inputEmail.val()}`);
             const datas = await response.text();
                 if (datas == "True") {
                     ExistWarn(warnEmail, "Email");
+                    flagEmail = false;
                 }
                 else {
                     OkWarn(warnEmail);
+                    flagEmail = true;
                 }
         }
+
+        check();
     })
 
     inputPW.blur(() => {
         if (re.test(inputPW.val())) {
             OkWarn(warnPW);
+            flagPsd = true;
         }
         else {
             warnPW.html("密碼格式錯誤").css("color", "red");
+            flagPsd = false;
         }
+
+        check();
     })
 
     inputCkPW.blur(() => {
         if (inputCkPW.val() == inputPW.val()) {
             OkWarn(warnCkPW);
+            flagCfmPsd = true;
         }
         else {
             warnCkPW.html("密碼不一致").css("color", "red");
+            flagCfmPsd = false;
         }
+
+        check();
     })
 </script>

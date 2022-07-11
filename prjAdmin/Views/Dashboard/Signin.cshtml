@@ -1,4 +1,5 @@
-﻿@*
+﻿@using prjAdmin.Controllers
+@*
     For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 *@
 <!DOCTYPE html>
@@ -102,18 +103,23 @@
                                         </div>
                                     </div>
                                     <!-- End of Form -->
-                                    <div class="d-flex justify-content-between align-items-top mb-4">
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" value="" id="remember">
-                                            <label class="form-check-label mb-0" for="remember">
-                                                記住我
-                                            </label>
+                                    <div class="d-flex justify-content-between align-items-top mb-4 row">
+                                        <label for="password" style="font-weight:bold">驗證碼</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text" id="basic-addon2">
+                                                <i class="fa-solid fa-key"></i>
+                                            </span>
+                                            <input type="text" placeholder="請輸入驗證碼" class="form-control" id="captcha" name="Captcha" required>
+                                            <div class="input-group-append">
+                                                <img id="imgcode" src="@Url.Content("~/Dashboard/GetCaptcha")" style="cursor:pointer"/>
+                                            </div>
                                         </div>
-                                        <div><a href="./forgot-password.html" class="small text-right">忘記密碼?</a></div>
+
+                                        @*<div><a href="./forgot-password.html" class="small text-right">忘記密碼?</a></div>*@
                                     </div>
                                 </div>
                                 <div class="d-grid">
-                                    <button type="submit" class="btn btn-gray-800">登入</button>
+                                    <button type="submit" class="btn btn-gray-800" id="submit">登入</button>
                                 </div>
                             </form>
                             <div class="d-flex justify-content-center align-items-center mt-4">
@@ -179,7 +185,7 @@
     let div = document.querySelector("#backgdimg"),
         eyeclick = false;
 
-    div.style.backgroundImage = "url('../../assets/img/illustrations/signin.png')";
+    div.style.backgroundImage = "url('@Url.Content("~/assets/img/illustrations/signin.png")')";
 
     $("#btneye").click(function () {
         console.log("aa");
@@ -191,6 +197,17 @@
         else {
             $("#btneye").html('<i class="fa-solid fa-eye-slash"></i>');
             $("#password").attr("type", "password");
+        }
+    })
+
+    $("#imgcode").click(function() {
+        $(this).attr("src", '@Url.Content("~/Dashboard/GetCaptcha?time=")'+(new Date()).getTime());
+    })
+
+    $("#submit").click(function () {
+        if ($("#captcha").val() != @DashboardController.randomCode) {
+            alert("驗證碼錯誤");
+            $("#imgcode").attr("src", '@Url.Content("~/Dashboard/GetCaptcha?time=")'+(new Date()).getTime());
         }
     })
 </script>

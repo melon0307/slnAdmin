@@ -9,5 +9,7 @@ namespace prjAdmin.ViewModels
     {
         public string txtAccount { get; set; }
         public string txtPassword { get; set; }
+        public string Captcha { get; set; }
+
     }
 }
