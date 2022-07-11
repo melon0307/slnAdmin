@@ -13,6 +13,7 @@ namespace prjAdmin.Controllers
     {
         private readonly CoffeeContext _context;
         private readonly IWebHostEnvironment _host;
+        public static string randomCode;
 
         public ApiController(CoffeeContext context, IWebHostEnvironment host)
         {
@@ -58,6 +59,13 @@ namespace prjAdmin.Controllers
         {
             var emailExist = _context.Admins.Any(a => a.Email == email);
             return Content(emailExist.ToString(), "text/plain", Encoding.UTF8);
+        }
+
+        public IActionResult GetCaptcha()
+        {
+            randomCode = CCaptcha.CreateRandomCode(5).ToLower();
+            byte[] captcha = CCaptcha.CreatImage(randomCode);
+            return File(captcha, "image/jpeg");
         }
     }
 }

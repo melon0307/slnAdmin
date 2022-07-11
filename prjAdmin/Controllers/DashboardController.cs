@@ -14,8 +14,7 @@ namespace prjAdmin.Controllers
     {
         public static Admin signIn_user = null;
         private readonly CoffeeContext _context;
-        public static string btnSignInText = "登入";
-        public static string randomCode;
+        public static string btnSignInText = "登入";        
 
         public DashboardController(CoffeeContext context)
         {
@@ -40,7 +39,8 @@ namespace prjAdmin.Controllers
         [HttpPost]
         public IActionResult Signin(CLoginViewModel vModel)
         {
-            if(vModel.Captcha.ToLower() == randomCode)
+            string randomCode = ApiController.randomCode;
+            if (vModel.Captcha.ToLower() == randomCode)
             {
                 var user = _context.Admins.FirstOrDefault(a => a.Email == vModel.txtAccount);
                 if (user != null)
@@ -72,12 +72,12 @@ namespace prjAdmin.Controllers
             return RedirectToAction("Index", "Dashboard");
         }
 
-        public IActionResult GetCaptcha()
-        {
-            randomCode = CCaptcha.CreateRandomCode(5).ToLower();
-            byte[] captcha = CCaptcha.CreatImage(randomCode);
-            return File(captcha, "image/jpeg");
-        }
+        //public IActionResult GetCaptcha()
+        //{
+        //    randomCode = CCaptcha.CreateRandomCode(5).ToLower();
+        //    byte[] captcha = CCaptcha.CreatImage(randomCode);
+        //    return File(captcha, "image/jpeg");
+        //}
 
         [HttpGet]
         public IActionResult Signup()
