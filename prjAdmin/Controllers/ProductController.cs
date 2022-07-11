@@ -229,7 +229,7 @@ namespace prjAdmin.Controllers
                             ClickCount = p.ClickCount,
                             TakeDown = p.TakeDown,
                             Star = p.Star,
-                            MainPhotoPath = p.MainPhotoPath
+                            MainPhotoPath = p.MainPhotoPath                            
                         })
                             .ToList();
                     }

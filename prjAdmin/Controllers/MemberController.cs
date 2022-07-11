@@ -97,8 +97,7 @@ namespace prjAdmin.Controllers
         }
 
         public IActionResult suspend(int id)
-        {
-            
+        {            
             if (HttpContext.Session.Keys.Contains(CDictionary.SK_LOGINED_USER))
             {                
                 string JsonUser = HttpContext.Session.GetString(CDictionary.SK_LOGINED_USER);

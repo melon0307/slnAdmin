@@ -29,7 +29,7 @@
                 <span asp-validation-for="CategoryId" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Country.CountryName" class="control-label"></label>
+                <label asp-for="Country.CountryName" class="control-label"></label>                
                 @Html.DropDownListFor(model => model.CountryId, ViewBag.CtryListItem as SelectList, new { @class = "form-control" })
                 <span asp-validation-for="CountryId" class="text-danger"></span>
             </div>
