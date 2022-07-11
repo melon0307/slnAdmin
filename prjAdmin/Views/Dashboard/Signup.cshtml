@@ -94,9 +94,14 @@
                                             <span class="input-group-text" id="basic-addon2">
                                                 <svg class="icon icon-xs text-gray-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"></path></svg>
                                             </span>
-                                            <input type="password" placeholder="請輸入密碼" class="form-control" id="password" name="Password" required>
-                                            <div class="input-group-append">
-                                                <button class="btn btn-light" type="button" id="btneye1"><i class="fa-solid fa-eye-slash"></i></button>
+                                            <input type="password" class="form-control" id="password" name="Password" placeholder="需含大小寫英數字符號，且長度不得小於8" pattern=".*[0-9a-zA-Z].{8,50}" required>
+                                            <input type="hidden" name="ProductOK" />
+                                            <input type="hidden" name="MemberOK" />
+                                            <input type="hidden" name="OrderOK" />
+                                            <input type="hidden" name="ArticleOK" />
+                                            <input type="hidden" name="AdminOK" />
+                                            <div class="input-group-append" >
+                                                <button class="btn btn-light" type="button" id="btneye1" ><i class="fa-solid fa-eye-slash"></i></button>
                                             </div>
                                         </div>
                                     </div>
@@ -187,7 +192,33 @@
         warnPW = $("#warnPW"),
         re = /^.*[0-9a-zA-Z].{8,50}$/,
         inputCkPW = $("#confirm_password"),
-        warnCkPW = $("#warnConfirmPW");
+        warnCkPW = $("#warnConfirmPW"),
+        eyeclick1 = false,
+        eyeclick2 = false;
+
+    $("#btneye1").click(function () {        
+        eyeclick1 = !eyeclick1;
+        if (eyeclick1) {
+            $("#btneye1").html('<i class="fa-solid fa-eye"></i>');
+            inputPW.attr("type", "text");
+        }
+        else {
+            $("#btneye1").html('<i class="fa-solid fa-eye-slash"></i>');
+            inputPW.attr("type", "password");
+        }
+    })
+
+    $("#btneye2").click(function () {        
+        eyeclick2 = !eyeclick2;
+        if (eyeclick2) {
+            $("#btneye2").html('<i class="fa-solid fa-eye"></i>');
+            inputCkPW.attr("type", "text");
+        }
+        else {
+            $("#btneye2").html('<i class="fa-solid fa-eye-slash"></i>');
+            inputCkPW.attr("type", "password");
+        }
+    })
 
     function EmptyWarn(ele,strinput) {
         ele.html(`${strinput}不得為空`).css("color", "red");
@@ -208,8 +239,7 @@
         else {
             const response = await fetch('@Url.Content("~/Api/IfEmailExist")' + `?Email=${inputEmail.val()}`);
             const datas = await response.text();
-
-                if (datas) {
+                if (datas == "True") {
                     ExistWarn(warnEmail, "Email");
                 }
                 else {
@@ -220,7 +250,7 @@
 
     inputPW.blur(() => {
         if (re.test(inputPW.val())) {
-            OKwarn(warnPW);
+            OkWarn(warnPW);
         }
         else {
             warnPW.html("密碼格式錯誤").css("color", "red");

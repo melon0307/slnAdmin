@@ -76,8 +76,9 @@ namespace prjAdmin.Controllers
         [HttpPost]
         public IActionResult Signup(Admin user)
         {
-            
-            return View();
+            _context.Admins.Add(user);
+            _context.SaveChanges();
+            return RedirectToAction("Index");
         }
     }
 }
