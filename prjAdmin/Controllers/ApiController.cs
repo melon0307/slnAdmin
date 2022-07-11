@@ -4,6 +4,7 @@ using prjAdmin.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace prjAdmin.Controllers
@@ -51,6 +52,12 @@ namespace prjAdmin.Controllers
         {
             var process = _context.Processes;
             return Json(process);
+        }
+
+        public IActionResult IfEmailExist(string email)
+        {
+            var emailExist = _context.Admins.Any(a => a.Email == email);
+            return Content(emailExist.ToString(), "text/plain", Encoding.UTF8);
         }
     }
 }
