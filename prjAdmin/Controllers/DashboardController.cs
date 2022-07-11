@@ -51,7 +51,7 @@ namespace prjAdmin.Controllers
                     return RedirectToAction("Index");
                 }
             }
-            return View();
+            return PartialView();
         }
 
         [HttpGet]

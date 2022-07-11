@@ -1,0 +1,59 @@
+﻿@model prjAdmin.Models.Article
+
+@{
+    ViewData["Title"] = "EditArticle";
+}
+
+<h1 class="h1" style="margin-top:0.5em">編輯文章</h1>
+<hr />
+<div class="row">
+    <div class="col-md-8">
+        <form asp-action="EditArticle" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" value="@Model.ArticleId" name="ArticleId" />
+            <div class="form-group">
+                <label asp-for="ArticleName" class="control-label"></label>
+                <input asp-for="ArticleName" class="form-control" />
+                <span asp-validation-for="ArticleName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ArticleDescription" class="control-label"></label>
+                <textarea id="editor" asp-for="ArticleDescription" class="form-control" rows="15" cols="60"></textarea>
+                <span asp-validation-for="ArticleDescription" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">上傳圖片</label>
+                <input type="file" name="photo" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label asp-for="ArticleDate" class="control-label"></label>
+                <input asp-for="ArticleDate" class="form-control" />
+                <span asp-validation-for="ArticleDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+<hr />
+@Html.ActionLink("放棄文章編輯", "List", new { }, new { Class = "btn btn-secondary", onclick = "return confirm('文章未儲存，離開畫面將遺失當前修改的文章，請確認是否放棄修改？')" })
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        ClassicEditor
+            .create(document.querySelector('#editor'))
+            .then(editor => {
+                console.log(editor);
+            })
+    </script>
+    <script>
+        let article = document.querySelector("#article")
+
+        article.classList.add("active")
+
+    </script>
+
+}

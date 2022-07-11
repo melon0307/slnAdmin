@@ -1,0 +1,72 @@
+﻿@model IEnumerable<prjAdmin.ViewModels.CArticleViewModel>
+
+@{
+    ViewData["Title"] = "List";
+}
+
+<h1 class="h1" style="margin-top:0.5em">文章</h1>
+<br />
+<a asp-action="CreatArticle" asp-controller="Article" class="btn btn-gray-800 d-inline-flex align-items-center me-2 dropdown-toggle">
+    <svg class="icon icon-xs me-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+    加入新文章
+</a>
+<br />
+<br />
+<table style="width:100%">
+    <thead>
+        <tr>
+            <th class="col-md-2">
+                @Html.DisplayNameFor(model => model.ArticleName)
+            </th>
+            <th class="col-md-7">
+                @Html.DisplayNameFor(model => model.ArticleDescription)
+            </th>
+            <th class="col-md-2">
+                @Html.DisplayNameFor(model => model.ArticleDate)
+
+            <th class="col-md-1"></th>
+        </tr>
+    </thead>
+    <tbody style="border-top: 0.125rem solid currentColor">
+        @{
+            int count = 0;
+            foreach (var item in Model)
+            {
+                count++;
+                <tr>
+                    <td class="col-md-3">
+                        <h3>
+                            @Html.DisplayFor(modelItem => item.ArticleName)
+                            <br />
+                            <br />
+                            <img src="~/articleImages/@item.ArticleImage" width="270" height="200" onerror="this.src='/articleImages/imgError.jpg'" />
+                        </h3>
+                    </td>
+                    <td class="col-md-8">
+                        @Html.Raw(item.ArticleDescription.Replace("<p>", " "))
+                    </td>
+                    <td class="col-md-1">
+                        @Html.Raw(item.ArticleDate.ToString().Substring(0, 9))
+                    </td>
+
+                    <td>
+
+                        @Html.ActionLink("修改", "EditArticle", new { id = item.ArticleId }, new { Class = "btn btn-sm btn-secondary" })
+                        <br />
+                        <br />
+                        @Html.ActionLink("刪除", "DeleteArticle", new { id = item.ArticleId }, new { Class = "btn btn-sm btn-primary", onclick = "return confirm('無法恢復，請確認是否刪除?')" })
+
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+@section Scripts{
+    <script>
+        let article = document.querySelector("#article")
+
+        article.classList.add("active")
+        
+    </script>
+}
