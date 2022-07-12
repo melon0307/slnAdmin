@@ -72,13 +72,6 @@ namespace prjAdmin.Controllers
             return RedirectToAction("Index", "Dashboard");
         }
 
-        //public IActionResult GetCaptcha()
-        //{
-        //    randomCode = CCaptcha.CreateRandomCode(5).ToLower();
-        //    byte[] captcha = CCaptcha.CreatImage(randomCode);
-        //    return File(captcha, "image/jpeg");
-        //}
-
         [HttpGet]
         public IActionResult Signup()
         {
@@ -92,5 +85,13 @@ namespace prjAdmin.Controllers
             _context.SaveChanges();
             return RedirectToAction("Signin");
         }
+
+        [HttpGet]
+        public IActionResult ForgotPassword()
+        {
+            return PartialView();
+        }
+
+
     }
 }
