@@ -29,6 +29,7 @@ namespace prjAdmin
             {
                 options.UseSqlServer(Configuration.GetConnectionString("CoffeeConnection"));
             });
+            //services.Configure<AppConfiguration>(Configuration.GetSection("AppConfiguration"));
             services.AddControllersWithViews();
             services.AddSession();
 

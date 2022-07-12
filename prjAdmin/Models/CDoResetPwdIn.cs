@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace prjAdmin.Models
 {
-	public class SendMailTokenOut
+	public class CDoResetPwdIn
 	{
-		public string ErrMsg { get; set; }
-		public string ResultMsg { get; set; }
+		public string NewUserPwd { get; set; }
+		public string CheckUserPwd { get; set; }
 	}
 }
