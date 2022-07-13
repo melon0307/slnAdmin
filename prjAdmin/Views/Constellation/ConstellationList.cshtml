@@ -22,23 +22,29 @@
         </tr>
     </thead>
     <tbody style="border-top: 0.125rem solid currentColor">
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.ConstellationId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ConstellationName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ConstellationProductId)
-            </td>
-            <td>
-                @Html.ActionLink("更換", "EditConstellation", new { id = item.ConstellationId }, new { Class = "btn btn-sm btn-secondary" }) 
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ConstellationId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ConstellationName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ConstellationProductId)
+                </td>
+                <td>
+                    @Html.ActionLink("更換", "EditConstellation", new { id = item.ConstellationId }, new { Class = "btn btn-sm btn-secondary" })
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
-
+@section Scripts{
+    <script>
+        let constellation = document.querySelector("#constellation");
+        constellation.classList.add("active")
+    </script>
+}
 

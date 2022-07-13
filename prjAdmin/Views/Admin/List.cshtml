@@ -1,0 +1,85 @@
+﻿@model IEnumerable<prjAdmin.Models.Admin>
+
+@{
+    ViewData["Title"] = "List";
+}
+
+<h1>管理員名單</h1>
+
+<p>
+    <a asp-action="Create">新增管理員</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.AdminId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Password)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductOk)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.OrderOk)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MemberOk)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ArticleOk)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AdminOk)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AdminId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Password)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProductOk)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OrderOk)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MemberOk)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ArticleOk)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AdminOk)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.AdminId })
+
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+@section Scripts{
+    <script>
+        let admin = document.querySelector("#admin")
+
+        admin.classList.add("active")
+        
+    </script>
+}

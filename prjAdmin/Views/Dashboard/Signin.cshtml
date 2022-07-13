@@ -126,9 +126,9 @@
                                     <a href="@Url.Content("~/Dashboard/Signup")" class="fw-bold">註冊</a>
                                 </span>
                                 <span class="fw-normal offset-sm-3">
-                                <a href="@Url.Content("~/Dashboard/ForgotPassword")" class="small text-right">忘記密碼?</a>
+                                    <a href="@Url.Content("~/Dashboard/ForgotPassword")" class="small text-right">忘記密碼?</a>
                                 </span>
-                            </div>                            
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -177,11 +177,11 @@
     <!-- Volt JS -->
     <script src="~/assets/js/volt.js"></script>
 
+    <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
 
 </body>
 
 </html>
-<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
 <script>
     let div = document.querySelector("#backgdimg"),
         eyeclick = false;
@@ -199,11 +199,11 @@
             $("#btneye").html('<i class="fa-solid fa-eye-slash"></i>');
             $("#password").attr("type", "password");
         }
-    })
+    });
 
-    $("#imgcode").click(async function() {
-       await $(this).attr("src", '@Url.Content("~/Api/GetCaptcha?time=")'+(new Date()).getTime());
-    })
+    $("#imgcode").click(async function () {
+        await $(this).attr("src", '@Url.Content("~/Api/GetCaptcha?time=")' + (new Date()).getTime());
+    });
 
     @*$("#submit").mouseover(function () {
         let randomCode = `@ApiController.randomCode`;
@@ -218,5 +218,5 @@
         else {
             $("#submit").attr("type", "submit");
         }*@
-    })
+    /*})*/
 </script>

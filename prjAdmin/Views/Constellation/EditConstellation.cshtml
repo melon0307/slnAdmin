@@ -32,4 +32,10 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+<script>
+    let constellation = document.querySelector("#constellation");
+    constellation.classList.add("active")
+</script>
+
 }
