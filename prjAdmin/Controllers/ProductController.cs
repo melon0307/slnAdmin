@@ -279,7 +279,7 @@ namespace prjAdmin.Controllers
 
         [HttpPost]
         public IActionResult Edit(CProductViewModel p)
-        {
+        {            
             if (HttpContext.Session.Keys.Contains(CDictionary.SK_LOGINED_USER))
             {
                 string JsonUser = HttpContext.Session.GetString(CDictionary.SK_LOGINED_USER);
@@ -294,6 +294,7 @@ namespace prjAdmin.Controllers
                         {
                             string pName = Guid.NewGuid().ToString() + ".jpg";
                             p.photo.CopyTo(new FileStream(_environment.WebRootPath + "/Images/" + pName, FileMode.Create));
+                            string aa = p.photo.FileName;
                             prod.MainPhotoPath = pName;
                         }
                         prod.ProductName = p.ProductName;

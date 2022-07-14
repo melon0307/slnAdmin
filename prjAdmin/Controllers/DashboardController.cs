@@ -154,6 +154,7 @@ namespace prjAdmin.Controllers
             HttpContext.Session.SetString(CDictionary.SK_ResetPassword_UserId, UserID);
 
             return PartialView();
-        }
+        }       
+
     }
 }
