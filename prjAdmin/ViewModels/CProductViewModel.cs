@@ -36,6 +36,7 @@ namespace prjAdmin.ViewModels
         public Country Country { get; set; }
         public Coffee Coffee { get; set; }
         public IFormFile photo { get; set; }
+        public IFormFile[] Subphotos { get; set; }
         public string MainPhotoPath { get; set; }
     }
 }

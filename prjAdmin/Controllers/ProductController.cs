@@ -295,6 +295,8 @@ namespace prjAdmin.Controllers
                             string pName = Guid.NewGuid().ToString() + ".jpg";
                             p.photo.CopyTo(new FileStream(_environment.WebRootPath + "/Images/" + pName, FileMode.Create));
                             string aa = p.photo.FileName;
+                            //string bb1 = p.Subphotos[0].FileName;
+                            //string bb2 = p.Subphotos[1].FileName;
                             prod.MainPhotoPath = pName;
                         }
                         prod.ProductName = p.ProductName;
