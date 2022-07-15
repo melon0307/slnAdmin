@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using prjAdmin.Models;
 using prjAdmin.ViewModels;
 using System;
@@ -27,7 +28,7 @@ namespace prjAdmin.Controllers
         }
 
         public IActionResult Index(CKeywordViewModel vModel)
-        {            
+        {
             if (HttpContext.Session.Keys.Contains(CDictionary.SK_LOGINED_USER))
             {
                 string JsonUser = HttpContext.Session.GetString(CDictionary.SK_LOGINED_USER);
@@ -212,7 +213,7 @@ namespace prjAdmin.Controllers
                     List<CProductViewModel> prod = null;
                     if (_context.Coffees.Any(c => c.ProductId == id))
                     {
-                        prod = _context.Products.Where(p => p.ProductId == id).Select(p => new CProductViewModel()
+                        prod = _context.Products.Include(p => p.Photos).Where(p => p.ProductId == id).Select(p => new CProductViewModel()
                         {
                             ProductId = p.ProductId,
                             ProductName = p.ProductName,
@@ -229,13 +230,14 @@ namespace prjAdmin.Controllers
                             ClickCount = p.ClickCount,
                             TakeDown = p.TakeDown,
                             Star = p.Star,
-                            MainPhotoPath = p.MainPhotoPath                            
+                            MainPhotoPath = p.MainPhotoPath,
+                            Subphotos = p.Photos.Select(p=>p.ImagePath).ToList()
                         })
                             .ToList();
                     }
                     else
                     {
-                        prod = _context.Products.Where(p => p.ProductId == id).Select(p => new CProductViewModel()
+                        prod = _context.Products.Include(p=>p.Photos).Where(p => p.ProductId == id).Select(p => new CProductViewModel()
                         {
                             ProductId = p.ProductId,
                             ProductName = p.ProductName,
@@ -248,7 +250,8 @@ namespace prjAdmin.Controllers
                             ClickCount = p.ClickCount,
                             TakeDown = p.TakeDown,
                             Star = p.Star,
-                            MainPhotoPath = p.MainPhotoPath
+                            MainPhotoPath = p.MainPhotoPath,
+                            Subphotos = p.Photos.Select(p => p.ImagePath).ToList()
                         })
                             .ToList();
                     }
@@ -267,7 +270,7 @@ namespace prjAdmin.Controllers
 
                     if (prod.Count == 0)
                         return RedirectToAction("Index");
-                    return View(prod[0]);
+                    return View(prod[0]);                    
                 }
 
                 return RedirectToAction("Index", "Dashboard");
@@ -279,7 +282,7 @@ namespace prjAdmin.Controllers
 
         [HttpPost]
         public IActionResult Edit(CProductViewModel p)
-        {            
+        {
             if (HttpContext.Session.Keys.Contains(CDictionary.SK_LOGINED_USER))
             {
                 string JsonUser = HttpContext.Session.GetString(CDictionary.SK_LOGINED_USER);

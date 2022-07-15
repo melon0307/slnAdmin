@@ -208,5 +208,21 @@ namespace prjAdmin.Controllers
             // 回傳 Json 給前端
             return Json(outModel);
         }
+
+        public async Task<IActionResult> DeleteSubPhoto(string url)
+        {
+            string imageName = url.Split("/Images/")[1];
+            int subPhotoId = _context.Photos.FirstOrDefault(p => p.ImagePath == imageName).PhotoId;
+            var subPhoto = await _context.Photos.FindAsync(subPhotoId);
+            if(subPhoto == null)
+            {
+                return NotFound();
+            }
+
+            _context.Photos.Remove(subPhoto);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
     }
 }
