@@ -21,14 +21,14 @@ namespace prjAdmin.Controllers
     public class ApiController : Controller
     {
         private readonly CoffeeContext _context;
-        private readonly IWebHostEnvironment _host;
+        private readonly IWebHostEnvironment _environment;
         private readonly IConfiguration _configuration;
         public static string randomCode;
 
-        public ApiController(CoffeeContext context, IWebHostEnvironment host, IConfiguration configuration)
+        public ApiController(CoffeeContext context, IWebHostEnvironment environment, IConfiguration configuration)
         {
             _context = context;
-            _host = host;
+            _environment = environment;
             _configuration = configuration;
         }
 
@@ -211,6 +211,7 @@ namespace prjAdmin.Controllers
 
         public async Task<IActionResult> DeleteSubPhoto(string url)
         {
+            // 刪除資料庫內圖片
             string imageName = url.Split("/Images/")[1];
             int subPhotoId = _context.Photos.FirstOrDefault(p => p.ImagePath == imageName).PhotoId;
             var subPhoto = await _context.Photos.FindAsync(subPhotoId);
@@ -222,6 +223,8 @@ namespace prjAdmin.Controllers
             _context.Photos.Remove(subPhoto);
             await _context.SaveChangesAsync();
 
+            // 刪除wwwroot/Images 資料夾內的圖片
+            System.IO.File.Delete(_environment.WebRootPath + "/Images/" + imageName);
             return NoContent();
         }
     }

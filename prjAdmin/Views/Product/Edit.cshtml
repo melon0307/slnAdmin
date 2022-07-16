@@ -4,7 +4,7 @@
     ViewData["Title"] = "Edit";
 }
 
-<h1 class="h1" style="margin-top:0.5em">修改產品</h1>
+<h1 class="h1" style="margin-top:0.5em;font-weight:bold">修改產品</h1>
 <div>
     <a asp-action="Index" class="btn btn-secondary"><i class="fa-solid fa-arrow-left-long"></i> 返回產品列表</a>
 </div>
@@ -62,15 +62,12 @@
             <div class="form-group">
                 <input asp-for="Star" class="form-control" hidden />
             </div>
-            <br />
-            <br />
-            <br />
-            <br />
-            <div class="form-group">
-                <input type="submit" value="確認" class="btn btn-primary" />
-            </div>
         </div>
-        <div style="width:5em"></div>
+        <div style="width: 5em; position: relative;">
+            @*<div class="form-group" style="position: absolute; bottom: 0px; right: 0px;">
+                    <input type="submit" value="確認" class="btn btn-primary" />
+                </div>*@
+        </div>
         <div class="col-4">
             <h4 style="text-decoration:underline">咖啡類詳細資料</h4>
             <div class="form-group">
@@ -106,11 +103,21 @@
                         <img id="imgPrev" src="~/Images/@Model.MainPhotoPath" class="mainImg" />*@
                 <div class="col-12">
                     <div class="card card-body border-0 shadow mb-4">
-                        <h2 class="h5 mb-4">產品圖片</h2>
+                        <h2 class="h5 mb-4">主產品圖片</h2>
                         <div class="d-flex align-items-center">
                             <div class="me-3">
                                 <!-- Avatar -->
-                                <img class="rounded avatar-xl" id="imgPrev" src="~/Images/@Model.MainPhotoPath" alt="產品圖" draggable="true" />
+                                @{
+                                    if (string.IsNullOrEmpty(Model.MainPhotoPath))
+                                    {
+                                        <img class="rounded avatar-xl" id="imgPrev" src="~/Images/新增產品預設圖.png" alt="主產品圖" draggable="true" />
+                                    }
+                                    else
+                                    {
+                                        <img class="rounded avatar-xl" id="imgPrev" src="~/Images/@Model.MainPhotoPath" alt="主產品圖" draggable="true" />
+                                    }
+                                }
+
                             </div>
                             <div class="file-field">
                                 <div class="d-flex justify-content-xl-center ms-xl-3">
@@ -118,7 +125,7 @@
                                         <svg class="icon text-gray-500 me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M8 4a3 3 0 00-3 3v4a5 5 0 0010 0V7a1 1 0 112 0v4a7 7 0 11-14 0V7a5 5 0 0110 0v4a3 3 0 11-6 0V7a1 1 0 012 0v4a1 1 0 102 0V7a3 3 0 00-3-3z" clip-rule="evenodd"></path></svg>
                                         <input type="file" name="photo" accept="image/*" id="customFile" />
                                         <div class="d-md-block text-left">
-                                            <div class="fw-normal text-dark mb-1">上傳產品圖片</div>
+                                            <div class="fw-normal text-dark mb-1">上傳主產品圖片</div>
                                             <div class="text-gray small">JPG, GIF or PNG</div>
                                         </div>
                                     </div>
@@ -129,41 +136,41 @@
                 </div>
                 <div class="col-12">
                     <div class="card card-body border-0 shadow mb-4">
-                        <h2 class="h5 mb-4">產品副圖片(2張)</h2>
+                        <h2 class="h5 mb-4">副產品圖片(2張)</h2>
                         <div class="d-flex align-items-center">
                             <div class="me-3">
                                 <!-- Avatar -->
                                 @{
-                                    if (Model.Subphotos.Count == 0)
+                                    if (Model.SubPhotosPath.Count == 0)
                                     {
-                                        <img class="rounded avatar-xl" id="imgPrev" src="~/Images/新增產品預設圖.png" alt="產品圖" draggable="true" />
+                                        <img class="rounded avatar-xl " id="imgPrev0" src="~/Images/新增產品預設圖.png" alt="副產品圖1" draggable="true" />
                                     }
                                     else
                                     {
-                                        <img class="rounded avatar-xl" id="imgPrev" src="~/Images/@Model.Subphotos[0]" alt="產品圖" draggable="true" />
+                                        <img class="rounded avatar-xl" id="imgPrev0" src="~/Images/@Model.SubPhotosPath[0]" alt="副產品圖1" draggable="true" />
                                     }
                                 }
                             </div>
                             <div class="me-3">
                                 <!-- Avatar -->
                                 @{
-                                    if (Model.Subphotos.Count <= 1)
+                                    if (Model.SubPhotosPath.Count <= 1)
                                     {
-                                        <img class="rounded avatar-xl" id="imgPrev" src="~/Images/新增產品預設圖.png" alt="產品圖" draggable="true" />
+                                        <img class="rounded avatar-xl" id="imgPrev1" src="~/Images/新增產品預設圖.png" alt="副產品圖2" draggable="true" />
                                     }
                                     else
                                     {
-                                        <img class="rounded avatar-xl" id="imgPrev" src="~/Images/@Model.Subphotos[1]" alt="產品圖" draggable="true" />
+                                        <img class="rounded avatar-xl" id="imgPrev1" src="~/Images/@Model.SubPhotosPath[1]" alt="副產品圖2" draggable="true" />
                                     }
-                                }                                
+                                }
                             </div>
                             <div class="file-field">
                                 <div class="d-flex justify-content-xl-center ms-xl-3">
                                     <div class="d-flex">
                                         <svg class="icon text-gray-500 me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M8 4a3 3 0 00-3 3v4a5 5 0 0010 0V7a1 1 0 112 0v4a7 7 0 11-14 0V7a5 5 0 0110 0v4a3 3 0 11-6 0V7a1 1 0 012 0v4a1 1 0 102 0V7a3 3 0 00-3-3z" clip-rule="evenodd"></path></svg>
-                                        <input type="file" name="photo" accept="image/*" id="customFile" />
+                                        <input type="file" name="SubPhotos" accept="image/*" id="customFile1" multiple />
                                         <div class="d-md-block text-left">
-                                            <div class="fw-normal text-dark mb-1">上傳產品圖片</div>
+                                            <div class="fw-normal text-dark mb-1">上傳副產品圖片</div>
                                             <div class="text-gray small">JPG, GIF or PNG</div>
                                         </div>
                                     </div>
@@ -175,14 +182,27 @@
             </div>
         </div>
     </div>
+    <hr />
+    <div style="display:flex">
+        <div style="width:2em"></div>
+        <div class="col-4"></div>
+        <div style="width: 5em; position: relative;">
+            <br />
+            <br />
+            <div class="form-group" style="position: absolute; bottom: 0px; right: 0px;">
+                <input type="submit" value="確認" class="btn btn-primary" />
+            </div>
+        </div>
+        <div class="col-4"></div>
+    </div>
 </form>
 <div class="theme-settings card bg-gray-800 pt-2 collapse" id="theme-settings">
     <div class="card-body bg-gray-800 text-white pt-4">
         <button type="button" class="btn-close theme-settings-close" aria-label="Close" data-bs-toggle="collapse"
                 href="#theme-settings" role="button" aria-expanded="false" aria-controls="theme-settings"></button>
-        <div class="col-12" id="customFile2">
+        <div class="col-12" id="DeletePhotos">
             <p>請將欲刪除圖片拖曳至此</p>
-            <div class="" style="border:2px dashed white;height:4em">
+            <div class="" style="border:4px dashed white;height:4em">
                 <!--<div class="d-flex align-items-center">
                     <div class="me-3">-->
                 <!--Avatar -->
@@ -222,48 +242,83 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     <script>
+/*const { forEach } = require("core-js/library/js/array");*/
+
         /*const { drop } = require("lodash");*/
 
         $("#customFile").change(function () {
-            readURL(this);
+            readUrl(this);
         });
-
-        function readURL(input) {
+        // 主圖片預覽圖
+        function readUrl(input) {
             if (input.files && input.files[0]) {
                 var reader = new FileReader();
                 reader.onload = function (event) {
                     $("#imgPrev").attr("src", event.target.result);
                 };
+
                 reader.readAsDataURL(input.files[0]);
             }
         }
-
-        //document.querySelector("#customFile2").addEventListener("dragover", e => {
-        //    e.preventDefault();
-        //    console.log("aa")
-        //})
-
-        $("#customFile2").change(function () {
-            readURL(this);
+        
+        $("#customFile1").change(function () {
+            readSubUrl(this);
         });
+        // 副圖片預覽圖
+        const imgsrc0 = $("#imgPrev0").attr("src"),
+              imgsrc1 = $("#imgPrev1").attr("src");
+        function readSubUrl(input) {
+            // 若上傳2張副圖片
+            if (input.files && input.files.length == 2) {
+                // 利用迴圈更改各預覽圖
+                for (let i = 0; i < 2; i++) {
+                    var reader = new FileReader;
+                    reader.onload = function (event) {
+                        $("#imgPrev" + `${i}`).attr("src", event.target.result);
+                    };
 
-        function readURL(input) {
-            if (input.files && input.files[0]) {
-                var reader = new FileReader();
+                    reader.readAsDataURL(input.files[i]);
+                }
+            };
+            // 若只上傳1張副圖片
+            if (input.files && input.files.length == 1) {
+                var reader = new FileReader;
                 reader.onload = function (event) {
-                    $("#imgPrev2").attr("src", event.target.result);
+                    if (imgsrc0 == "/Images/新增產品預設圖.png") {
+                        $("#imgPrev0").attr("src", event.target.result);                       
+                    }
+                    else {
+                        if (imgsrc1 == "/Images/新增產品預設圖.png") {
+                            $("#imgPrev1").attr("src", event.target.result);
+                            return;
+                        }
+                        if ($("#imgPrev0").attr("src") == imgsrc1) {
+                            $("#imgPrev1").attr("src", event.target.result);
+                            return;
+                        }
+                        // 刪除原本第1張預覽圖，第2張預覽圖往前遞補。第2張預覽圖顯示新上傳的副圖片
+                        let srcString = $("#imgPrev1").attr("src");
+                        $("#imgPrev0").attr("src", srcString);
+                        $("#imgPrev1").attr("src", event.target.result);
+                    };                    
                 };
+
                 reader.readAsDataURL(input.files[0]);
+            };
+            // 若上傳超過2張圖片
+            if (input.files && input.files.length >= 3) {
+                alert("最多只能添加2張產品副圖片");
+                return;
             }
         }
 
-        $("#customFile2").on("dragover", function (e) {
+        $("#DeletePhotos").on("dragover", function (e) {
             e.preventDefault();
             console.log("aa")
             return false;
         });
 
-        $("#customFile2").on("drop", function (e) {
+        $("#DeletePhotos").on("drop", function (e) {
             e.preventDefault();
             var yes = confirm("確定要刪除嗎?");
             if (yes) {

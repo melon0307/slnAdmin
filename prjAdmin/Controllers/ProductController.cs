@@ -231,7 +231,7 @@ namespace prjAdmin.Controllers
                             TakeDown = p.TakeDown,
                             Star = p.Star,
                             MainPhotoPath = p.MainPhotoPath,
-                            Subphotos = p.Photos.Select(p=>p.ImagePath).ToList()
+                            SubPhotosPath = p.Photos.Select(p=>p.ImagePath).ToList()
                         })
                             .ToList();
                     }
@@ -251,7 +251,7 @@ namespace prjAdmin.Controllers
                             TakeDown = p.TakeDown,
                             Star = p.Star,
                             MainPhotoPath = p.MainPhotoPath,
-                            Subphotos = p.Photos.Select(p => p.ImagePath).ToList()
+                            SubPhotosPath = p.Photos.Select(p => p.ImagePath).ToList()
                         })
                             .ToList();
                     }
@@ -293,14 +293,38 @@ namespace prjAdmin.Controllers
                     Product prod = _context.Products.Find(p.ProductId);
                     if (prod != null)
                     {
+                        // 若有上傳主圖片
                         if (p.photo != null)
                         {
+                            // 新建圖片檔案在wwwroot/Images
                             string pName = Guid.NewGuid().ToString() + ".jpg";
                             p.photo.CopyTo(new FileStream(_environment.WebRootPath + "/Images/" + pName, FileMode.Create));
-                            string aa = p.photo.FileName;
-                            //string bb1 = p.Subphotos[0].FileName;
-                            //string bb2 = p.Subphotos[1].FileName;
+                            // 更新資料庫圖片檔名
                             prod.MainPhotoPath = pName;
+                        }
+                        // 若有上傳副圖片
+                        if(p.SubPhotos != null)
+                        {
+                            foreach(IFormFile subphoto in p.SubPhotos)
+                            {                                
+                                var origPhotos = _context.Photos.Where(photo => photo.ProductId == p.ProductId).ToList();
+                                // 若此產品的副圖片原本就有2張，且繼續上傳副圖片的話，刪除原本第1張舊圖片
+                                if(origPhotos.Count > 1)
+                                {
+                                    System.IO.File.Delete(_environment.WebRootPath + "/Images/" + origPhotos[0].ImagePath);
+                                    _context.Photos.Remove(origPhotos[0]);                                    
+                                }
+
+                                // 新建圖片檔案在wwwroot/Images
+                                string spName = Guid.NewGuid().ToString() + ".jpg";
+                                subphoto.CopyTo(new FileStream(_environment.WebRootPath + "/Images/" + spName, FileMode.Create));                                
+                                // 更新副圖片資料表
+                                Photo newphoto = new Photo();
+                                newphoto.ProductId = p.ProductId;
+                                newphoto.ImagePath = spName;
+                                _context.Photos.Add(newphoto);
+                                _context.SaveChanges();
+                            }
                         }
                         prod.ProductName = p.ProductName;
                         prod.CategoryId = p.CategoryId;
