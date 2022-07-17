@@ -166,6 +166,7 @@
 @section Scripts {
     @*@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}*@
     <script>
+    // ===================== 將資料載入select元素 =====================
         const selCategory = document.querySelector("#select1"),
               selCourtry = document.querySelector("#select2"),
               selPackage = document.querySelector("#select3"),
@@ -225,7 +226,9 @@
             selProcess.options.add(opt);
         });
     };
-
+    // ===================== 將資料載入select元素 =====================
+    // =========================== 預覽圖 ============================
+        // 主產品預覽圖
     $("#customFile").change(function () {
         readURL(this);
     });
@@ -239,13 +242,15 @@
                 reader.readAsDataURL(input.files[0]);
             }
         }
-
+        // 副產品預覽圖
         $("#customFile1").change(function () {
             readSubUrl(this);
         });
 
         function readSubUrl(input) {
+            // 若上傳複數張副圖片
             if (input.files && input.files.length <= 2) {
+                // 利用迴圈更改各預覽圖
                 for (let i = 0; i < 2; i++) {
                     var reader = new FileReader;
                     reader.onload = function (event) {
@@ -256,10 +261,12 @@
                 }
 
             }
+            // 若上傳超過2張圖片
             if (input.files && input.files.length >= 3) {
                 alert("最多只能添加2張產品副圖片");
                 return;
             }
         }
+    // =========================== 預覽圖 ============================
     </script>
 }

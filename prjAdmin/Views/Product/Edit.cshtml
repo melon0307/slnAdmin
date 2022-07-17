@@ -242,10 +242,7 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     <script>
-/*const { forEach } = require("core-js/library/js/array");*/
-
-        /*const { drop } = require("lodash");*/
-
+        //========================= 預覽圖 =========================
         $("#customFile").change(function () {
             readUrl(this);
         });
@@ -260,7 +257,7 @@
                 reader.readAsDataURL(input.files[0]);
             }
         }
-        
+
         $("#customFile1").change(function () {
             readSubUrl(this);
         });
@@ -284,23 +281,26 @@
             if (input.files && input.files.length == 1) {
                 var reader = new FileReader;
                 reader.onload = function (event) {
+                    //若第1張圖為預設圖(產品未上傳任何副圖片)，則改變第1張圖(左)
                     if (imgsrc0 == "/Images/新增產品預設圖.png") {
-                        $("#imgPrev0").attr("src", event.target.result);                       
+                        $("#imgPrev0").attr("src", event.target.result);
                     }
                     else {
+                        // 若第2張為預設圖(產品已有1張副圖片)，則更新第2張圖(右)
                         if (imgsrc1 == "/Images/新增產品預設圖.png") {
                             $("#imgPrev1").attr("src", event.target.result);
                             return;
                         }
+                        // 若第1張圖為原本地2張遞補的圖，繼續點擊上傳的話則只改變第2張圖(右)
                         if ($("#imgPrev0").attr("src") == imgsrc1) {
                             $("#imgPrev1").attr("src", event.target.result);
                             return;
                         }
-                        // 刪除原本第1張預覽圖，第2張預覽圖往前遞補。第2張預覽圖顯示新上傳的副圖片
+                        // 若原本都不是預設圖，刪除原本第1張預覽圖，第2張預覽圖往前遞補。第2張預覽圖顯示新上傳的副圖片
                         let srcString = $("#imgPrev1").attr("src");
                         $("#imgPrev0").attr("src", srcString);
                         $("#imgPrev1").attr("src", event.target.result);
-                    };                    
+                    };
                 };
 
                 reader.readAsDataURL(input.files[0]);
@@ -311,7 +311,9 @@
                 return;
             }
         }
+         //========================= 預覽圖 =========================
 
+         //====================== 拖曳刪除圖片 =======================
         $("#DeletePhotos").on("dragover", function (e) {
             e.preventDefault();
             console.log("aa")
@@ -328,7 +330,7 @@
                 });
             };
         });
-
+         //====================== 拖曳刪除圖片 =======================
     </script>
 }
 
