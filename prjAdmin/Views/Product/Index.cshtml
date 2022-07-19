@@ -13,12 +13,12 @@
                 <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path>
             </svg>
         </span>
-        <span class="input-group-text" id="topbar-addon">
+        <span class="input-group-text" id="topbar-addon" style="cursor:pointer" onclick="startButton(event)">
             <i class="fa-solid fa-microphone"></i>
         </span>
         <input type="text" name="txtKeyword" class="form-control" id="topbarInputIconLeft" placeholder="搜尋" aria-label="Search" aria-describedby="topbar-addon">
     </div>
-    <div >
+    <div>
         <label style="margin-left:5em" id="infoBox">提示文字</label>
     </div>
 </form>
@@ -34,7 +34,7 @@
     <table class="table-hover">
         <thead>
             <tr>
-                <th class="col-md-1" >
+                <th class="col-md-1">
                     產品圖片
                 </th>
                 <th class="col-md-1" style="text-align:center">
@@ -67,13 +67,13 @@
                 <th class="col-md-1" style="text-align:center">操作</th>
             </tr>
         </thead>
-        <tbody >
+        <tbody>
             @{
                 int count = 0;
                 foreach (var item in Model)
                 {
                     count++;
-                    <tr >
+                    <tr>
                         <td class="col-md-1">
                             <img src="~/Images/@item.MainPhotoPath" />
                         </td>
@@ -138,55 +138,60 @@
 
         $(".key").parents("tr").css("background-color", "#FFFAF4");
 
-        var recognizing = false,
-            infoBox = $("#infoBox"),
-            textBox = $("#topbarInputIconLeft"),            
-            final = "";
+        //==================================================================================================
+        var infoBox; // 訊息 label
+        var textBox; // 最終的辨識訊息 text input        
+        var final_transcript = ''; // 最終的辨識訊息的變數
+        var recognizing = false; // 是否辨識中
 
-        if (recognizing) {
-            recognition.stop();
-        }
-        else {
-            textBox.val() = "";
-            final = "";
-            recognition.lang = "zh-tw";
-            recognition.start();
+        function startButton(event) {
+            infoBox = $("#infoBox"); // 取得訊息控制項 infoBox
+            textBox = $("#topbarInputIconLeft"); // 取得最終的辨識訊息控制項 textBox
+            
+            if (recognizing) { // 如果正在辨識，則停止。
+                recognition.stop();
+            } else { // 否則就開始辨識
+                textBox.val("");  // 清除最終的辨識訊息
+                final_transcript = ""; // 最終的辨識訊息變數
+                recognition.lang = "zh-tw"; // 設定辨識語言
+                recognition.start(); // 開始辨識
+            }
         }
 
-        if (!("webkitSpeechRecognition" in window)) {
+        if (!('webkitSpeechRecognition' in window)) {  // 如果找不到 window.webkitSpeechRecognition 這個屬性
+            // 就是不支援語音辨識，要求使用者更新瀏覽器。 
             infoBox.text = "本瀏覽器不支援語音辨識，請更換瀏覽器！(Chrome 25 版以上才支援語音辨識)";
-        }
-        else {
-            var recognition = new webkitSpeechRecognition();
+        } else {
+            var recognition = new webkitSpeechRecognition(); // 建立語音辨識物件 webkitSpeechRecognition
+            recognition.continuous = true; // 設定連續辨識模式
+            recognition.interimResults = true; // 設定輸出中先結果。
 
-            recognition.continuous = true;
-            recognition.interimResults = true;
-            recognition.onstart = function () {
-                recognizing = true;
-                infoBox.text = "麥克風已開啟";
+            recognition.onstart = function () { // 開始辨識
+                recognizing = true; // 設定為辨識中                
+                infoBox.text = "辨識中...";  // 顯示訊息為「辨識中」...
             };
-            recognition.onresult = function (event) {
-                var interim = "";
-                infoBox.text = "辨識中...";
-                for (var i = event.resultIndex; i < event.result.length; i++) {
-                    if (event.results[i].isFinal) {
-                        final += event.results[i][0].transcript;
+
+            recognition.onend = function () { // 辨識完成
+                recognizing = false; // 設定為「非辨識中」                
+                infoBox.text = ""; // 不顯示訊息
+            };
+
+            recognition.onresult = function (event) { // 辨識有任何結果時
+                var interim_transcript = ""; // 中間結果
+                for (var i = event.resultIndex; i < event.results.length; ++i) { // 對於每一個辨識結果
+                    if (event.results[i].isFinal) { // 如果是最終結果
+                        final_transcript += event.results[i][0].transcript; // 將其加入最終結果中
+                    } else { // 否則
+                        interim_transcript += event.results[i][0].transcript; // 將其加入中間結果中
                     }
-                    else {
-                        interim += event.results[i][0].transcript;
-                    };
-                };
-                if (final.trim().length > 0) {
-                    textBox.text.text = final;
-                };
-            }
-            recognition.onspeechend = function () {
-                infoBox.text = "沒有偵測到語音";
-            }
-            recognition.onerror = function () {
-                infoBox.text = "錯誤";
-            }
+                }
+                if (final_transcript.trim().length > 0) // 如果有最終辨識文字
+                    textBox.val(final_transcript); // 顯示最終辨識文字
+                /*if (interim_transcript.trim().length > 0) // 如果有中間辨識文字*/
+                     // 顯示中間辨識文字
+            }          
         }
+        
     </script>
 }
 
