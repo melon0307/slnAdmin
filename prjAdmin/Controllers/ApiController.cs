@@ -153,7 +153,7 @@ namespace prjAdmin.Controllers
                 }
 
                 outModel.ResultMsg = "請於 30 分鐘內至你的信箱點擊連結重新設定密碼，逾期將無效";
-        }
+            }
             else
             {
                 outModel.ErrMsg = "查無此郵件信箱";
@@ -191,8 +191,8 @@ namespace prjAdmin.Controllers
             }
 
             // 檢查帳號 Session 是否存在
-            if (!HttpContext.Session.Keys.Contains(CDictionary.SK_ResetPassword_UserId)||
-                HttpContext.Session.GetString(CDictionary.SK_ResetPassword_UserId)=="")
+            if (!HttpContext.Session.Keys.Contains(CDictionary.SK_ResetPassword_UserId) ||
+                HttpContext.Session.GetString(CDictionary.SK_ResetPassword_UserId) == "")
             {
                 outModel.ErrMsg = "無修改帳號";
                 return Json(outModel);
@@ -215,7 +215,7 @@ namespace prjAdmin.Controllers
             string imageName = url.Split("/Images/")[1];
             int subPhotoId = _context.Photos.FirstOrDefault(p => p.ImagePath == imageName).PhotoId;
             var subPhoto = await _context.Photos.FindAsync(subPhotoId);
-            if(subPhoto == null)
+            if (subPhoto == null)
             {
                 return NotFound();
             }
@@ -226,6 +226,34 @@ namespace prjAdmin.Controllers
             // 刪除wwwroot/Images 資料夾內的圖片
             System.IO.File.Delete(_environment.WebRootPath + "/Images/" + imageName);
             return NoContent();
+        }
+
+        public JsonResult BatchTakeDown(string ids)
+        {
+            ids = ids.Substring(0, ids.Length - 1);
+            string[] idlist = ids.Split(",");
+            foreach (var item in idlist)
+            {
+                int id = Convert.ToInt32(item);
+                var product = _context.Products.FirstOrDefault(p => p.ProductId == id);
+                product.TakeDown = true;
+            }
+            _context.SaveChanges();
+            return Json(new { state = "200" });
+        }
+
+        public JsonResult BatchLaunch(string ids)
+        {
+            ids = ids.Substring(0, ids.Length - 1);
+            string[] idlist = ids.Split(",");
+            foreach (var item in idlist)
+            {
+                int id = Convert.ToInt32(item);
+                var product = _context.Products.FirstOrDefault(p => p.ProductId == id);
+                product.TakeDown = false;
+            }
+            _context.SaveChanges();
+            return Json(new { state = "200" });
         }
     }
 }

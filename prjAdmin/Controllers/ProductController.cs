@@ -178,7 +178,7 @@ namespace prjAdmin.Controllers
 
             DashboardController.btnSignInText = "登入";
             return RedirectToAction("Index", "Dashboard");
-        }
+        }       
 
         public IActionResult Launch(int id)
         {
@@ -199,7 +199,7 @@ namespace prjAdmin.Controllers
 
             DashboardController.btnSignInText = "登入";
             return RedirectToAction("Index", "Dashboard");
-        }
+        }     
 
         [HttpGet]
         public IActionResult Edit(int? id)
