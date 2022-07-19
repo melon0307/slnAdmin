@@ -13,7 +13,13 @@
                 <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path>
             </svg>
         </span>
+        <span class="input-group-text" id="topbar-addon">
+            <i class="fa-solid fa-microphone"></i>
+        </span>
         <input type="text" name="txtKeyword" class="form-control" id="topbarInputIconLeft" placeholder="搜尋" aria-label="Search" aria-describedby="topbar-addon">
+    </div>
+    <div >
+        <label style="margin-left:5em" id="infoBox">提示文字</label>
     </div>
 </form>
 
@@ -126,11 +132,60 @@
 </div>
 @section Scripts{
     <script>
-        let pro = document.querySelector("#product")
+        let pro = document.querySelector("#product");
 
-        pro.classList.add("active")
+        pro.classList.add("active");
 
         $(".key").parents("tr").css("background-color", "#FFFAF4");
+
+        var recognizing = false,
+            infoBox = $("#infoBox"),
+            textBox = $("#topbarInputIconLeft"),            
+            final = "";
+
+        if (recognizing) {
+            recognition.stop();
+        }
+        else {
+            textBox.val() = "";
+            final = "";
+            recognition.lang = "zh-tw";
+            recognition.start();
+        }
+
+        if (!("webkitSpeechRecognition" in window)) {
+            infoBox.text = "本瀏覽器不支援語音辨識，請更換瀏覽器！(Chrome 25 版以上才支援語音辨識)";
+        }
+        else {
+            var recognition = new webkitSpeechRecognition();
+
+            recognition.continuous = true;
+            recognition.onstart = function () {
+                recognizing = true;
+                infoBox.text = "麥克風已開啟";
+            };
+            recognition.onresult = function (event) {
+                var interim = "";
+                infoBox.text = "辨識中...";
+                for (var i = event.resultIndex; i < event.result.length; i++) {
+                    if (event.results[i].isFinal) {
+                        final += event.results[i][0].transcript;
+                    }
+                    else {
+                        interim += event.results[i][0].transcript;
+                    };
+                };
+                if (final.trim().length > 0) {
+                    textBox.text.text = final;
+                };
+            }
+            recognition.onspeechend = function () {
+                infoBox.text = "沒有偵測到語音";
+            }
+            recognition.onerror = function () {
+                infoBox.text = "錯誤";
+            }
+        }
     </script>
 }
 
