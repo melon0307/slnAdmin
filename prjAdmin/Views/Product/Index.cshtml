@@ -160,6 +160,7 @@
             var recognition = new webkitSpeechRecognition();
 
             recognition.continuous = true;
+            recognition.interimResults = true;
             recognition.onstart = function () {
                 recognizing = true;
                 infoBox.text = "麥克風已開啟";
