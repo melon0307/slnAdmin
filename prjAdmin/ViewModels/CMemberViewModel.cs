@@ -88,7 +88,7 @@ namespace prjAdmin.ViewModels
         }        
 
         [DisplayName("會員狀態")]
-        public bool? BlackList
+        public bool BlackList
         {
             get { return _mem.BlackList; }
             set { _mem.BlackList = value; }

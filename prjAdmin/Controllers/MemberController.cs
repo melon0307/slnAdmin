@@ -16,6 +16,7 @@ namespace prjAdmin.Controllers
         private readonly IWebHostEnvironment _environment;
         private readonly CoffeeContext _context;
         private static Admin signIn_User;
+        private static int currentMembersOrderDetails;
 
         public MemberController(CoffeeContext context, IWebHostEnvironment host)
         {
@@ -148,6 +149,7 @@ namespace prjAdmin.Controllers
                 {
                     CMemberDetailsViewModel modelDetails = new CMemberDetailsViewModel();
                     CMemberViewModel model = new CMemberViewModel();
+                    currentMembersOrderDetails = (int)id;
                     model.member = _context.Members.Find(id);
                     if (model.member == null)
                     {
@@ -160,7 +162,8 @@ namespace prjAdmin.Controllers
                         order = o,
                         Payment = o.Payment,
                         Coupon = o.Coupon,
-                        OrderState = o.OrderState
+                        OrderState = o.OrderState,
+                        
                     })
                         .ToList();
 
@@ -173,6 +176,77 @@ namespace prjAdmin.Controllers
 
             DashboardController.btnSignInText = "登入";
             return RedirectToAction("Index", "Dashboard");
+        }
+
+        public IActionResult Filter1(int? id)
+        {
+            IEnumerable<COrderViewModel> datas = null;
+            List<COrderViewModel> list = new List<COrderViewModel>();
+            var dborder = _context.Orders.Where(o => o.MemberId == currentMembersOrderDetails).Select(t => new COrderViewModel
+            {
+                OrderId = t.OrderId,
+                Payment = t.Payment,
+                OrderState = t.OrderState,
+                TradeNo = t.TradeNo,
+                MemberId = t.MemberId,
+                OrderDate = t.OrderDate,
+                OrderStateId = t.OrderStateId,
+                PaymentId = t.PaymentId,
+                OrderAddress = t.OrderAddress,
+                OrderPhone = t.OrderPhone,
+                OrderReceiver = t.OrderReceiver
+            });
+
+            foreach (COrderViewModel item in dborder)
+            {
+                COrderViewModel o = new COrderViewModel();
+                o.OrderId = item.OrderId;
+                o.Payment = item.Payment;
+                o.OrderState = item.OrderState;
+                o.TradeNo = item.TradeNo;
+                o.MemberId = item.MemberId;
+                o.OrderDate = item.OrderDate;
+                o.OrderStateId = item.OrderStateId;
+                o.PaymentId = item.PaymentId;
+                o.OrderAddress = item.OrderAddress;
+                o.OrderPhone = item.OrderPhone;
+                o.OrderReceiver = item.OrderReceiver;
+                list.Add(o);
+            }
+            if (id == 0)
+            {
+                datas = list;
+            }
+            else
+                datas = list.Where(p => p.OrderStateId == id);
+
+            return PartialView(datas);
+        }
+
+        public IActionResult Detail(int? id)
+        {
+            var couponid = _context.Orders.FirstOrDefault(t => t.OrderId == id)?.CouponId;
+            var fee = _context.Orders.FirstOrDefault(t => t.OrderId == id)?.Fee;
+
+            decimal couponprice = 0;
+
+            if (fee == null) fee = 0;
+            if (couponid != null)
+            {
+                couponprice = _context.Coupons.FirstOrDefault(c => c.CouponId == couponid).Money;
+            }
+
+            var data = _context.OrderDetails.Where(t => t.OrderId == id).Select(o => new
+            {
+                d產品名 = o.Product.ProductName,
+                d單價 = o.Product.Price,
+                d數量 = o.Quantity,
+                d小計 = o.Product.Price * o.Quantity,
+                d運費 = fee,
+                d優惠卷金額 = couponprice
+            });
+
+            return Json(data);
         }
     }
 }

@@ -353,6 +353,8 @@ namespace prjAdmin.Models
 
                 entity.Property(e => e.CouponId).HasColumnName("CouponID");
 
+                entity.Property(e => e.Fee).HasColumnType("money");
+
                 entity.Property(e => e.MemberId).HasColumnName("MemberID");
 
                 entity.Property(e => e.OrderAddress)
@@ -372,6 +374,10 @@ namespace prjAdmin.Models
                 entity.Property(e => e.OrderStateId).HasColumnName("OrderStateID");
 
                 entity.Property(e => e.PaymentId).HasColumnName("PaymentID");
+
+                entity.Property(e => e.TradeNo)
+                    .IsRequired()
+                    .HasMaxLength(50);
 
                 entity.HasOne(d => d.Coupon)
                     .WithMany(p => p.Orders)

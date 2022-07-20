@@ -1,0 +1,138 @@
+﻿@model IEnumerable<prjAdmin.ViewModels.COrderViewModel>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                序號
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TradeNo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MemberId)
+            </th>
+            <th>
+                訂單日期
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PaymentId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.OrderReceiver)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.OrderPhone)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.OrderAddress)
+            </th>
+            <th>
+                訂單明細
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.OrderStateId)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OrderId)
+                    <input type="hidden" id="idorderid" value="@item.OrderId" />
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TradeNo)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MemberId)
+                </td>
+                <td>
+                    @item.OrderDate.ToString("D")
+                </td>
+                <td>
+                    @item.Payment.Payment1
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OrderReceiver)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OrderPhone)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OrderAddress)
+                </td>
+                <td>
+                    <button type="button" id="btndetail" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                        訂單明細
+                    </button>
+
+                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content" style="width:600px">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">訂單明細</h5>
+                                    <button type="button" id="btndetail" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>
+                                                    產品名稱
+                                                </th>
+                                                <th>
+                                                    產品單價
+                                                </th>
+                                                <th>
+                                                    數量
+                                                </th>
+                                                <th>
+                                                    小計
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="detailbody"></tbody>
+                                    </table> <br />
+                                    <p id="labsubtotal"></p>
+                                    <p id="labcoupon"></p>
+                                    <p id="labfee"></p>
+                                    <p id="labtotal"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </td>
+                <td>
+                    <div class="dropdown">
+                        <input type="hidden" value=" @item.OrderState.OrderStateId" id="stateid" />
+                        <button class="btn btn-secondary btnstate dropdown-toggle " type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                            @item.OrderState.OrderState1
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                            <li><a class="dropdown-item" href="@Url.Action("Editstate","Order", new { orderid = item.OrderId, stateid=1})" onclick="return confirm('確認要修改訂單狀態?')">已收到訂單</a></li>
+                            <li><a class="dropdown-item" href="@Url.Action("Editstate","Order", new { orderid = item.OrderId, stateid=2})" onclick="return confirm('確認要修改訂單狀態?')">已出貨</a></li>
+                            <li><a class="dropdown-item" href="@Url.Action("Editstate","Order", new { orderid = item.OrderId, stateid=3})" onclick="return confirm('確認要修改訂單狀態?')">已送達收貨地址</a></li>
+                            <li><a class="dropdown-item" href="@Url.Action("Editstate","Order", new { orderid = item.OrderId, stateid=4})" onclick="return confirm('確認要修改訂單狀態?')">已取消</a></li>
+                            <li><a class="dropdown-item" href="@Url.Action("Editstate","Order", new { orderid = item.OrderId, stateid=5})" onclick="return confirm('確認要修改訂單狀態?')">審核中</a></li>
+                        </ul>
+                    </div>
+
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<script>
+    $("button[id='dropdownMenuButton1']").each(function () {
+        if ($(this).parent().find("#stateid").val() == 1) $(this).addClass("active1");
+        else if ($(this).parent().find("#stateid").val() == 2) $(this).addClass("active2");
+        else if ($(this).parent().find("#stateid").val() == 3) $(this).addClass("active3");
+        else if ($(this).parent().find("#stateid").val() == 4) $(this).addClass("active4");
+        else if ($(this).parent().find("#stateid").val() == 5) $(this).addClass("active5");
+    })
+</script>

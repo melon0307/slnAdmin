@@ -3,6 +3,65 @@
 @{
     ViewData["Title"] = "Details";
 }
+@section Styles
+{
+    <style>
+        .active1 { /*已收到訂單 */
+            background-color: lightblue;
+            border: 1px lightblue solid;
+        }
+
+            .active1:hover {
+                background-color: cornflowerblue;
+                border: 1px cornflowerblue solid;
+                color: white;
+            }
+
+        .active2 { /*已出貨*/
+            background-color: orange;
+            border: 1px orange solid;
+        }
+
+            .active2:hover {
+                background-color: coral;
+                border: 1px coral solid;
+                color: white;
+            }
+
+        .active3 { /*已送達收貨地址*/
+            background-color: limegreen;
+            border: 1px limegreen solid;
+        }
+
+            .active3:hover {
+                background-color: seagreen;
+                border: 1px seagreen solid;
+                color: white;
+            }
+
+        .active4 { /*已取消*/
+            background-color: gray;
+            border: 1px gray solid;
+        }
+
+            .active4:hover {
+                background-color: dimgrey;
+                border: 1px dimgrey solid;
+                color: white;
+            }
+
+        .active5 { /*審核中*/
+            background-color: red;
+            border: 1px orangered solid;
+        }
+
+            .active5:hover {
+                background-color: red;
+                border: 1px red solid;
+                color: white;
+            }
+    </style>
+}
 <br />
 <div>
     <a asp-action="Index" class="btn btn-secondary"><i class="fa-solid fa-arrow-left-long"></i> 返回會員列表</a>
@@ -80,7 +139,7 @@
                             {
                                 <h5 class="fw-normal" style="font-weight:bold;color:red">停權中</h5>
                             }
-                        }                        
+                        }
                         <p class="text-gray mb-4">@Model.member.MemberEmail</p>
                         <a class="btn btn-sm btn-gray-800 d-inline-flex align-items-center me-2" href="mailto:@Model.member.MemberEmail">
                             <i class="fa-solid fa-envelope me-1"></i>
@@ -99,7 +158,27 @@
     </div>
     <div class="card card-body border-0 shadow mb-4 mb-xl-0">
         <h2 class="h5 mb-4" style="font-weight:bold">會員消費紀錄</h2>
-        <div class="card card-body border-0 shadow table-wrapper table-responsive">
+        <br />
+        <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+            <input type="radio" class="btn-check" name="btnradio" id="btnradio0" autocomplete="off" value="0" checked>
+            <label class="btn btn-outline-primary" for="btnradio0">全部訂單</label>
+
+            <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" value="1">
+            <label class="btn btn-outline-primary" for="btnradio1">已收到訂單</label>
+
+            <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off" value="2">
+            <label class="btn btn-outline-primary" for="btnradio2">已出貨</label>
+
+            <input type="radio" class="btn-check" name="btnradio" id="btnradio3" autocomplete="off" value="3">
+            <label class="btn btn-outline-primary" for="btnradio3">已送達收貨地址</label>
+
+            <input type="radio" class="btn-check" name="btnradio" id="btnradio4" autocomplete="off" value="4">
+            <label class="btn btn-outline-primary" for="btnradio4">已取消</label>
+
+            <input type="radio" class="btn-check" name="btnradio" id="btnradio5" autocomplete="off" value="5">
+            <label class="btn btn-outline-primary" for="btnradio5">審核中</label>
+        </div>
+        <div class="card card-body border-0 shadow table-wrapper table-responsive" id="content" style="overflow-x:auto;overflow-y:auto">
             <table class="table-hover">
                 <thead>
                     <tr>
@@ -115,17 +194,17 @@
                         <th class="col-1" style="text-align:center">
                             支付方式
                         </th>
+                        <th class="col-1" style="text-align:center">
+                            收件者
+                        </th>
+                        <th class="col-1" style="text-align:center">
+                            電話
+                        </th>
                         <th class="col-2" style="text-align:center">
                             地址
                         </th>
-                        <th class="col-2" style="text-align:center">
-                            會員姓名
-                        </th>
                         <th class="col-1" style="text-align:center">
-                            會員電話
-                        </th>
-                        <th class="col-1" style="text-align:center">
-                            折價券
+                            訂單明細
                         </th>
                         <th class="col-1" style="text-align:center">
                             訂單狀態
@@ -136,8 +215,12 @@
                     @foreach (var item in Model.order)
                     {
                         <tr>
-                            <td>
+                            <td hidden>
                                 @Html.DisplayFor(modelItem => item.OrderId)
+                                <input type="hidden" id="idorderid" value="@item.OrderId" />
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.TradeNo)
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.MemberId)
@@ -149,16 +232,51 @@
                                 @Html.DisplayFor(modelItem => item.Payment.Payment1)
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => item.OrderAddress)
-                            </td>
-                            <td style="text-align:center">
                                 @Html.DisplayFor(modelItem => item.OrderReceiver)
                             </td>
                             <td style="text-align:center">
                                 @Html.DisplayFor(modelItem => item.OrderPhone)
                             </td>
                             <td style="text-align:center">
-                                @Html.DisplayFor(modelItem => item.Coupon.CouponName)
+                                @Html.DisplayFor(modelItem => item.OrderAddress)
+                            </td>
+                            <td style="text-align:center">
+                                <button type="button" id="btndetail" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">訂單明細</button>
+                                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content" style="width:600px">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">訂單明細</h5>
+                                                <button type="button" id="btndetail" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <table class="table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>
+                                                                產品名稱
+                                                            </th>
+                                                            <th>
+                                                                產品單價
+                                                            </th>
+                                                            <th>
+                                                                數量
+                                                            </th>
+                                                            <th>
+                                                                小計
+                                                            </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="detailbody"></tbody>
+                                                </table> <br />
+                                                <p id="labsubtotal"></p>
+                                                <p id="labcoupon"></p>
+                                                <p id="labfee"></p>
+                                                <p id="labtotal"></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </td>
                             <td class="col-md-1" style="text-align:center">
                                 @Html.DisplayFor(modelItem => item.OrderState.OrderState1)
@@ -170,3 +288,43 @@
         </div>
     </div>
 </div>
+@section Scripts{
+    <script>
+        //篩選訂單======================================
+        $(".btn-group").on("click", ".btn-check", function () {
+            $(":checked").each(function () {
+                let id = $(this).val();
+                $("#content").load('@Url.Content("~/Member/Filter1")' + "?id=" + id );
+            })
+
+        });
+
+         //訂單明細======================================
+        $("#content").on("click", "#btndetail", function () {
+                let id = $("#idorderid").val();
+            $("#detailbody").html("");
+            $.get('@Url.Content("~/Member/Detail")', { "id": id },
+                function (data) {
+                    let 小計 = 0;
+                    let 折價卷金額 = 0;
+                    let 運費 = 0;
+                    let 總金額 = 0;
+                    $.each(data, function (index, value) {
+                        let content = `<tr><td>${value.d產品名}</td><td>${value.d單價}</td><td>${value.d數量}</td><td>${value.d小計}</td>`
+                        $("#detailbody").append(content);
+                        小計 += value.d小計;
+                        折價卷金額 = value.d優惠卷金額;
+                        運費 = value.d運費;
+                    })
+                    總金額 = 小計 - 折價卷金額 + 運費;
+                    $("#labsubtotal").html(`商品小計 : $NT${小計}`);
+                    if (折價卷金額!=0) {
+                        $("#labcoupon").html(`優惠折扣 : -$NT${折價卷金額}`);
+                    }
+                    else $("#labcoupon").html("");
+                    $("#labfee").html(`運費 : $NT${運費}`);
+                    $("#labtotal").html(`訂單總金額 : $NT${總金額}`).css({ "font-size": 20, "color": "#F75000" });
+                })
+        })
+    </script>
+}

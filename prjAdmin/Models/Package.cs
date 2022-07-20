@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 
 #nullable disable
 
@@ -14,7 +13,6 @@ namespace prjAdmin.Models
         }
 
         public int PackageId { get; set; }
-        [DisplayName("包裝法")]
         public string PackageName { get; set; }
 
         public virtual ICollection<Coffee> Coffees { get; set; }

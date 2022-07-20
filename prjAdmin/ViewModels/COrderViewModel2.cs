@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace prjAdmin.ViewModels
 {
-    public class COrderViewModel
+    public class COrderViewModel2
     {
         private Order _ord;
 
-        public COrderViewModel()
+        public COrderViewModel2()
         {
             _ord = new Order();
         }
