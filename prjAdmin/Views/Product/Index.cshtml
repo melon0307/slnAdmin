@@ -231,8 +231,8 @@
                 ids += id + ",";
             });
             //console.log(ids);
-            let msg = "確定要進行批量下架嗎?";
-            if (confirm(msg) == true) {
+            let yes = confirm("確定要進行批量下架嗎?");
+            if (yes) {
                 $.ajax({
                     type: "POST",
                     url: "Api/BatchTakeDown",
@@ -245,21 +245,21 @@
                         else {
                             alert("下架失敗");
                         }
-                    })
+                    });
             }
             else {
                 return false;
-            }
-        })
+            };
+        });
 
         $("#batchLaunch").click(function () {
             var ids = new Array();
             $("input:checkbox:checked").each(function () {
                 var id = $(this).val();
                 ids += id + ",";
-            });            
-            let msg = "確定要進行批量上架嗎?";
-            if (confirm(msg) == true) {
+            });
+            let yes = confirm("確定要進行批量上架嗎?");
+            if (yes) {
                 $.ajax({
                     type: "POST",
                     url: "Api/BatchLaunch",
@@ -272,12 +272,12 @@
                         else {
                             alert("上架失敗");
                         }
-                    })
+                    });
             }
             else {
                 return false;
-            }
-        })
+            };
+        });
 
     </script>
 }
