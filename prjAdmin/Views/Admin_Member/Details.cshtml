@@ -1,0 +1,330 @@
+﻿@model prjAdmin.ViewModels.CMemberDetailsViewModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+@section Styles
+{
+    <style>
+        .active1 { /*已收到訂單 */
+            background-color: lightblue;
+            border: 1px lightblue solid;
+        }
+
+            .active1:hover {
+                background-color: cornflowerblue;
+                border: 1px cornflowerblue solid;
+                color: white;
+            }
+
+        .active2 { /*已出貨*/
+            background-color: orange;
+            border: 1px orange solid;
+        }
+
+            .active2:hover {
+                background-color: coral;
+                border: 1px coral solid;
+                color: white;
+            }
+
+        .active3 { /*已送達收貨地址*/
+            background-color: limegreen;
+            border: 1px limegreen solid;
+        }
+
+            .active3:hover {
+                background-color: seagreen;
+                border: 1px seagreen solid;
+                color: white;
+            }
+
+        .active4 { /*已取消*/
+            background-color: gray;
+            border: 1px gray solid;
+        }
+
+            .active4:hover {
+                background-color: dimgrey;
+                border: 1px dimgrey solid;
+                color: white;
+            }
+
+        .active5 { /*審核中*/
+            background-color: red;
+            border: 1px orangered solid;
+        }
+
+            .active5:hover {
+                background-color: red;
+                border: 1px red solid;
+                color: white;
+            }
+    </style>
+}
+<br />
+<div>
+    <a asp-action="Index" class="btn btn-secondary"><i class="fa-solid fa-arrow-left-long"></i> 返回會員列表</a>
+</div>
+<br />
+<div class="row">
+    <div class="col-12 col-xl-8">
+        <div class="card card-body border-0 shadow mb-4">
+            <h2 class="h5 mb-4" style="font-weight:bold">會員基本資料</h2>
+            <form>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="member.MemberId" for="MemberId" style="font-weight:bold"></label>
+                        <input asp-for="member.MemberId" id="MemberId" class="form-control" type="text" placeholder="會員編號" readonly />
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div>
+                            <label asp-for="member.MemberName" for="MemberName" style="font-weight:bold"></label>
+                            <input asp-for="member.MemberName" id="MemberName" class="form-control" type="text" placeholder="會員姓名" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <div>
+                            <label asp-for="member.MemberPhone" for="MemberPhone" style="font-weight:bold"></label>
+                            <input asp-for="member.MemberPhone" id="MemberPhone" class="form-control" type="text" placeholder="會員電話" readonly>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="member.MemberBirthDay" for="MemberBirthDay" style="font-weight:bold"></label>
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <svg class="icon icon-xs" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path></svg>
+                            </span>
+                            <input asp-for="member.MemberBirthDay" class="form-control" id="MemberBirthDay" type="text" placeholder="yyyy/mm/dd" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="row align-items-center">
+
+                    <div class="col-md-6 mb-3">
+                        <div>
+                            <label asp-for="member.MemberEmail" for="MemberEmail" style="font-weight:bold"></label>
+                            <input asp-for="member.MemberEmail" id="MemberEmail" class="form-control" type="text" placeholder="name@company.com" readonly>
+                        </div>
+                    </div>
+                </div>
+                <h2 class="h5 my-4" style="font-weight:bold">住址</h2>
+                <div class="row">
+                    <div class="col-sm-9 mb-3">
+                        <div class="form-group">
+                            <label asp-for="member.MemberAddress" for="MemberAddress" style="font-weight:bold"></label>
+                            <input asp-for="member.MemberAddress" class="form-control" id="MemberAddress" type="text" placeholder="會員地址" readonly>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="col-12 col-xl-4">
+        <div class="row">
+            <div class="col-12 mb-4">
+                <div class="card shadow border-0 text-center p-0">
+                    <div class="profile-cover rounded-top" style="background:url('../../assets/img/profile-cover.jpg')"></div>
+                    <div class="card-body pb-5">
+                        <img src="~/Images/@Model.member.MemberPhotoPath" class="avatar-xl rounded-circle mx-auto mt-n7 mb-4" alt="會員圖片">
+                        <h4 class="h3">@Model.member.MemberName</h4>
+                        @{
+                            if (Model.member.BlackList == false)
+                            {
+                                <h5 class="fw-normal" style="font-weight:bold;color:green">未停權</h5>
+                            }
+                            else
+                            {
+                                <h5 class="fw-normal" style="font-weight:bold;color:red">停權中</h5>
+                            }
+                        }
+                        <p class="text-gray mb-4">@Model.member.MemberEmail</p>
+                        <a class="btn btn-sm btn-gray-800 d-inline-flex align-items-center me-2" href="mailto:@Model.member.MemberEmail">
+                            <i class="fa-solid fa-envelope me-1"></i>
+                            @*<svg class="icon icon-xs me-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6zM16 7a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V7z"></path></svg>*@
+                            Email
+                        </a>
+                        @{ if (Model.member.BlackList == false)
+                                @Html.ActionLink("停權處理", "suspend", "Admin_Member", new { id = Model.member.MemberId }, new { @class = "btn btn-sm btn-danger", onclick = "return confirm('確認要停權此會員嗎?')" })
+                                else
+                                    @Html.ActionLink("重新啟用", "restart", "Admin_Member", new { id = Model.member.MemberId }, new { @class = "btn btn-sm btn-success key", onclick = "return confirm('確認要解除此會員的停權嗎?')" })
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card card-body border-0 shadow mb-4 mb-xl-0">
+        <h2 class="h5 mb-4" style="font-weight:bold">會員消費紀錄</h2>
+        <br />
+        <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+            <input type="radio" class="btn-check" name="btnradio" id="btnradio0" autocomplete="off" value="0" checked>
+            <label class="btn btn-outline-primary" for="btnradio0">全部訂單</label>
+
+            <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" value="1">
+            <label class="btn btn-outline-primary" for="btnradio1">已收到訂單</label>
+
+            <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off" value="2">
+            <label class="btn btn-outline-primary" for="btnradio2">已出貨</label>
+
+            <input type="radio" class="btn-check" name="btnradio" id="btnradio3" autocomplete="off" value="3">
+            <label class="btn btn-outline-primary" for="btnradio3">已送達收貨地址</label>
+
+            <input type="radio" class="btn-check" name="btnradio" id="btnradio4" autocomplete="off" value="4">
+            <label class="btn btn-outline-primary" for="btnradio4">已取消</label>
+
+            <input type="radio" class="btn-check" name="btnradio" id="btnradio5" autocomplete="off" value="5">
+            <label class="btn btn-outline-primary" for="btnradio5">審核中</label>
+        </div>
+        <div class="card card-body border-0 shadow table-wrapper table-responsive" id="content" style="overflow-x:auto;overflow-y:auto">
+            <table class="table-hover">
+                <thead>
+                    <tr>
+                        <th class="col-1">
+                            #
+                        </th>
+                        <th class="col-1">
+                            會員編號
+                        </th>
+                        <th class="col-1" style="text-align:center">
+                            成立日期
+                        </th>
+                        <th class="col-1" style="text-align:center">
+                            支付方式
+                        </th>
+                        <th class="col-1" style="text-align:center">
+                            收件者
+                        </th>
+                        <th class="col-1" style="text-align:center">
+                            電話
+                        </th>
+                        <th class="col-2" style="text-align:center">
+                            地址
+                        </th>
+                        <th class="col-1" style="text-align:center">
+                            訂單明細
+                        </th>
+                        <th class="col-1" style="text-align:center">
+                            訂單狀態
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.order)
+                    {
+                        <tr>
+                            <td hidden>
+                                @Html.DisplayFor(modelItem => item.OrderId)
+                                <input type="hidden" id="idorderid" value="@item.OrderId" />
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.TradeNo)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.MemberId)
+                            </td>
+                            <td style="text-align:center">
+                                @Convert.ToDateTime(item.OrderDate).ToString("yyyy/MM/dd")
+                            </td>
+                            <td style="text-align:center">
+                                @Html.DisplayFor(modelItem => item.Payment.Payment1)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.OrderReceiver)
+                            </td>
+                            <td style="text-align:center">
+                                @Html.DisplayFor(modelItem => item.OrderPhone)
+                            </td>
+                            <td style="text-align:center">
+                                @Html.DisplayFor(modelItem => item.OrderAddress)
+                            </td>
+                            <td style="text-align:center">
+                                <button type="button" id="btndetail" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">訂單明細</button>
+                                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content" style="width:600px">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">訂單明細</h5>
+                                                <button type="button" id="btndetail" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <table class="table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>
+                                                                產品名稱
+                                                            </th>
+                                                            <th>
+                                                                產品單價
+                                                            </th>
+                                                            <th>
+                                                                數量
+                                                            </th>
+                                                            <th>
+                                                                小計
+                                                            </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="detailbody"></tbody>
+                                                </table> <br />
+                                                <p id="labsubtotal"></p>
+                                                <p id="labcoupon"></p>
+                                                <p id="labfee"></p>
+                                                <p id="labtotal"></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="col-md-1" style="text-align:center">
+                                @Html.DisplayFor(modelItem => item.OrderState.OrderState1)
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <script>
+        //篩選訂單======================================
+        $(".btn-group").on("click", ".btn-check", function () {
+            $(":checked").each(function () {
+                let id = $(this).val();
+                $("#content").load('@Url.Content("~/Admin_Member/Filter1")' + "?id=" + id );
+            })
+
+        });
+
+         //訂單明細======================================
+        $("#content").on("click", "#btndetail", function () {
+                let id = $("#idorderid").val();
+            $("#detailbody").html("");
+            $.get('@Url.Content("~/Admin_Member/Detail")', { "id": id },
+                function (data) {
+                    let 小計 = 0;
+                    let 折價卷金額 = 0;
+                    let 運費 = 0;
+                    let 總金額 = 0;
+                    $.each(data, function (index, value) {
+                        let content = `<tr><td>${value.d產品名}</td><td>${value.d單價}</td><td>${value.d數量}</td><td>${value.d小計}</td>`
+                        $("#detailbody").append(content);
+                        小計 += value.d小計;
+                        折價卷金額 = value.d優惠卷金額;
+                        運費 = value.d運費;
+                    })
+                    總金額 = 小計 - 折價卷金額 + 運費;
+                    $("#labsubtotal").html(`商品小計 : $NT${小計}`);
+                    if (折價卷金額!=0) {
+                        $("#labcoupon").html(`優惠折扣 : -$NT${折價卷金額}`);
+                    }
+                    else $("#labcoupon").html("");
+                    $("#labfee").html(`運費 : $NT${運費}`);
+                    $("#labtotal").html(`訂單總金額 : $NT${總金額}`).css({ "font-size": 20, "color": "#F75000" });
+                })
+        })
+    </script>
+}

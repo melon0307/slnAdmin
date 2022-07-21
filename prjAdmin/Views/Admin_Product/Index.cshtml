@@ -1,0 +1,344 @@
+﻿@model IEnumerable<prjAdmin.ViewModels.CProductViewModel>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1 class="h1" style="margin-top: 0.5em; font-weight: bold">產品列表</h1>
+<!-- Search form -->
+<form class="navbar-search form-inline col-md-4" id="navbar-search-main">
+    <div class="input-group input-group-merge search-bar">
+        <span class="input-group-text" id="topbar-addon">
+            <svg class="icon icon-xs" x-description="Heroicon name: solid/search" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path>
+            </svg>
+        </span>
+        <span class="input-group-text" id="topbar-addon" style="cursor:pointer" onclick="startButton(event)">
+            <i class="fa-solid fa-microphone"></i>
+        </span>
+        <input type="text" name="txtKeyword" class="form-control" id="topbarInputIconLeft" placeholder="搜尋" aria-label="Search" aria-describedby="topbar-addon">
+    </div>
+    <div>
+        <label style="margin-left:5em" id="infoBox"></label>
+    </div>
+</form>
+
+<br />
+<a asp-action="Create" class="btn btn-gray-800 d-inline-flex align-items-center me-2 dropdown-toggle">
+    <svg class="icon icon-xs me-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+    新增產品
+</a>
+<a @*asp-action=""*@ id="batchTakeDown" class="btn btn-secondary d-inline-flex align-items-center me-2 dropdown-toggle">
+    @*<svg class="icon icon-xs me-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>*@
+    <i class="fa-solid fa-download me-2"></i>
+    批量下架
+</a>
+<a @*asp-action=""*@ id="batchLaunch" class="btn btn-success d-inline-flex align-items-center me-2 dropdown-toggle">
+    @*<svg class="icon icon-xs me-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>*@
+    <i class="fa-solid fa-upload me-2"></i>
+    批量上架
+</a>
+<br />
+<br />
+<div class="card card-body border-0 shadow table-wrapper table-responsive">
+    <table class="table-hover">
+        <thead>
+            <tr>
+                <th class="col-md-0.5" id="one" style="cursor:pointer">
+                    #
+                </th>
+                <th class="col-md-1">
+                    產品圖片
+                </th>
+                <th class="col-md-1" style="text-align:center">
+                    @Html.DisplayNameFor(model => model.ProductName)
+                </th>
+                <th class="col-md-0.5" style="text-align:center">
+                    @Html.DisplayNameFor(model => model.Category.CategoriesName)
+                </th>
+                <th class="col-md-1" style="text-align:center">
+                    @Html.DisplayNameFor(model => model.Country.CountryName)
+                </th>
+                <th class="col-md-1" style="text-align:center">
+                    @Html.DisplayNameFor(model => model.Price)
+                </th>
+                <th class="col-md-2" style="text-align:center">
+                    @Html.DisplayNameFor(model => model.Description)
+                </th>
+                <th class="col-md-1" style="text-align:center">
+                    @Html.DisplayNameFor(model => model.Stock)
+                </th>
+                <th class="col-md-1" style="text-align:center">
+                    @Html.DisplayNameFor(model => model.ClickCount)
+                </th>
+                <th class="col-md-1" style="text-align:center">
+                    @Html.DisplayNameFor(model => model.TakeDown)
+                </th>
+                <th class="col-md-1" style="text-align:center">
+                    @Html.DisplayNameFor(model => model.Star)
+                </th>
+                <th class="col-md-1" style="text-align:center">操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                int count = 0;
+                foreach (var item in Model)
+                {
+                    count++;
+                    <tr>
+                        <td class="col-md-0.5">
+                            <input type="checkbox" value="@Html.DisplayFor(model=>item.ProductId)" />
+                        </td>
+                        <td class="col-md-1">
+                            <img src="~/Images/@item.MainPhotoPath" />
+                        </td>
+                        <td class="col-md-1" style="text-align:center">
+                            @Html.DisplayFor(modelItem => item.ProductName)
+                        </td>
+                        <td class="col-md-1" style="text-align:center">
+                            @Html.DisplayFor(modelItem => item.Category.CategoriesName)
+                        </td>
+                        <td class="col-md-1" style="text-align:center">
+                            @Html.DisplayFor(modelItem => item.Country.CountryName)
+                        </td>
+                        <td class="col-md-1" style="text-align:center">
+                            $@Convert.ToInt32(item.Price).ToString(".")
+                        </td>
+                        <td class="col-md-1.5">
+                            @Html.DisplayFor(modelItem => item.Description)
+                        </td>
+                        <td class="col-md-1" style="text-align:center">
+                            @Html.DisplayFor(modelItem => item.Stock)
+                        </td>
+                        <td class="col-md-1" style="text-align:center">
+                            @Html.DisplayFor(modelItem => item.ClickCount)
+                        </td>
+                        <td class="col-md-1" style="text-align:center">
+                            @{
+                                if (item.TakeDown == false)
+                                {
+                                    @:上架中
+                                }
+                                else
+                                {
+                                    @Html.Label("下架", "下架中", new { style = "color:red;font-weight:bold" })
+                                }
+                            }
+                        </td>
+                        <td class="col-md-1">
+                            @Html.DisplayFor(modelItem => item.Star)
+
+                        </td>
+                        <td class="col-md-1" style="text-align:center">
+                            @Html.ActionLink("編輯", "Edit", "Admin_Product", new { id = item.ProductId }, new { @class = "btn btn-sm btn-primary" })
+                            <br />
+                            <br />
+                            @{ if (item.TakeDown == false)
+                                {
+                                    <button type="button" class="btn btn-sm btn-secondary takedown" id="btnTakeDown" value="@item.ProductId">下架</button>
+                                }
+                                //@Html.ActionLink("下架", "TakeDown", "Admin_Product", new { id = item.ProductId }, new { @class = "btn btn-sm btn-secondary", onclick = "return confirm('確認要下架此產品嗎?')" })
+                                else
+                                {
+                                    <button type="button" class="btn btn-sm btn-success launch key" id="btnLaunch" value="@item.ProductId">上架</button>
+                                }
+                                //@Html.ActionLink("上架", "Launch", "Admin_Product", new { id = item.ProductId }, new { @class = "btn btn-sm btn-success key", onclick = "return confirm('確認要上架此產品嗎?')" })
+                            }
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+@section Scripts{
+    <script>
+        let pro = document.querySelector("#product");
+
+        pro.classList.add("active");
+
+        $(".key").parents("tr").css("background-color", "#FFFAF4");
+
+        //==================================================================================================
+        var infoBox; // 訊息 label
+        var textBox; // 最終的辨識訊息 text input
+        var final_transcript = ''; // 最終的辨識訊息的變數
+        var recognizing = false; // 是否辨識中
+
+        function startButton(event) {
+            infoBox = $("#infoBox"); // 取得訊息控制項 infoBox
+            textBox = $("#topbarInputIconLeft"); // 取得最終的辨識訊息控制項 textBox
+
+            if (recognizing) { // 如果正在辨識，則停止。
+                recognition.stop();
+            } else { // 否則就開始辨識
+                textBox.val("");  // 清除最終的辨識訊息
+                final_transcript = ""; // 最終的辨識訊息變數
+                recognition.lang = "zh-tw"; // 設定辨識語言
+                recognition.start(); // 開始辨識
+            }
+        }
+
+        if (!('webkitSpeechRecognition' in window)) {  // 如果找不到 window.webkitSpeechRecognition 這個屬性
+            // 就是不支援語音辨識，要求使用者更新瀏覽器。
+            infoBox.text("本瀏覽器不支援語音辨識，請更換瀏覽器！(Chrome 25 版以上才支援語音辨識)");
+        } else {
+            var recognition = new webkitSpeechRecognition(); // 建立語音辨識物件 webkitSpeechRecognition
+            recognition.continuous = true; // 設定連續辨識模式
+            recognition.interimResults = true; // 設定輸出中先結果。
+
+            recognition.onstart = function () { // 開始辨識
+                recognizing = true; // 設定為辨識中
+                infoBox.text("辨識中...");  // 顯示訊息為「辨識中」...
+            };
+
+            recognition.onend = function () { // 辨識完成
+                recognizing = false; // 設定為「非辨識中」
+                infoBox.text(""); ; // 不顯示訊息
+            };
+
+            recognition.onresult = function (event) { // 辨識有任何結果時
+                var interim_transcript = ""; // 中間結果
+                for (var i = event.resultIndex; i < event.results.length; ++i) { // 對於每一個辨識結果
+                    if (event.results[i].isFinal) { // 如果是最終結果
+                        final_transcript += event.results[i][0].transcript; // 將其加入最終結果中
+                    } else {
+                        interim_transcript += event.results[i][0].transcript; // 將其加入中間結果中
+                    }
+                }
+                if (final_transcript.trim().length > 0) // 如果有最終辨識文字
+                    textBox.val(final_transcript); // 顯示最終辨識文字
+                if (interim_transcript.trim().length > 0) // 如果有中間辨識文字
+                {
+                    if (interim_transcript.trim() == "新增產品") {
+                        const sleep = (delay) => new Promise((resolve) => setTimeout(resolve, delay))
+                        async function refreshText()  {
+                            for (let i = 3; i >= 0; i--) {
+                                await sleep(1000);
+                                infoBox.text(`${i}秒後前往新增產品頁面...`);
+                            }
+                            window.location = '@Url.Action("Create", "Admin_Product")';
+                        };
+
+                        refreshText();
+                    }
+                }
+            }
+        }
+
+        // 單筆下架
+        $(".takedown").each(function () {
+            $(this).click(function () {
+                var id = $(this).attr("value");
+
+                let yes = confirm("確定要進行下架嗎?");
+                if (yes) {
+                    $.ajax({
+                        type: "POST",
+                        url: "Admin_Api/TakeDown",
+                        data: { id: id }
+                    })
+                        .done(function (data) {
+                            if (data.state == 200) {
+                                window.location.reload();
+                            }
+                            else {
+                                alert("下架失敗");
+                            }
+                        });
+                }
+                else {
+                    return false;
+                };
+            });
+        });
+
+        // 單筆上架 
+        $(".launch").each(function () {
+            $(this).click(function () {
+                var id = $(this).attr("value");
+
+                let yes = confirm("確定要進行上架嗎?");
+                if (yes) {
+                    $.ajax({
+                        type: "POST",
+                        url: "Admin_Api/Launch",
+                        data: { id: id }
+                    })
+                        .done(function (data) {
+                            if (data.state == 200) {
+                                window.location.reload();
+                            }
+                            else {
+                                alert("下架失敗");
+                            }
+                        });
+                }
+                else {
+                    return false;
+                };
+            });
+        });
+
+        $("#one").click(function () {
+           $(":input:checkbox").prop("checked","checked")
+        });
+
+        $("#batchTakeDown").click(function () {
+            var ids = new Array();
+            $("input:checkbox:checked").each(function () {
+                var id = $(this).val();
+                ids += id + ",";
+            });
+
+            let yes = confirm("確定要進行批量下架嗎?");
+            if (yes) {
+                $.ajax({
+                    type: "POST",
+                    url: "Admin_Api/BatchTakeDown",
+                    data: { ids: ids }
+                })
+                    .done(function (data) {
+                        if (data.state == 200) {
+                            window.location.reload();
+                        }
+                        else {
+                            alert("下架失敗");
+                        }
+                    });
+            }
+            else {
+                return false;
+            };
+        });
+
+        $("#batchLaunch").click(function () {
+            var ids = new Array();
+            $("input:checkbox:checked").each(function () {
+                var id = $(this).val();
+                ids += id + ",";
+            });
+            let yes = confirm("確定要進行批量上架嗎?");
+            if (yes) {
+                $.ajax({
+                    type: "POST",
+                    url: "Admin_Api/BatchLaunch",
+                    data: { ids: ids }
+                })
+                    .done(function (data) {
+                        if (data.state == 200) {
+                            window.location.reload();
+                        }
+                        else {
+                            alert("上架失敗");
+                        }
+                    });
+            }
+            else {
+                return false;
+            };
+        });
+    </script>
+}
+

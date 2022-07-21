@@ -9,7 +9,7 @@ namespace prjAdmin.ViewModels
     public class CAdimnViewModel
     {
         public int AdminId { get; set; }
-        [Remote(action: "IfEmailExist",controller:"Api",HttpMethod ="POST")]
+        [Remote(action: "IfEmailExist",controller:"Admin_Api",HttpMethod ="POST")]
         public string Email { get; set; }
         public string Password { get; set; }
         public bool ProductOk { get; set; }

@@ -13,6 +13,7 @@ namespace prjAdmin.Models
         }
 
         public int PaymentId { get; set; }
+
         public string Payment1 { get; set; }
 
         public virtual ICollection<Order> Orders { get; set; }

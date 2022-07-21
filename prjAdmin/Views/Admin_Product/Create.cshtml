@@ -1,0 +1,272 @@
+﻿@model prjAdmin.ViewModels.CProductViewModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1 class="h1" style="margin-top:0.5em">新增產品</h1>
+<div>
+    <a asp-action="Index" class="btn btn-secondary"><i class="fa-solid fa-arrow-left-long"></i> 返回產品列表</a>
+</div>
+<hr />
+
+<form asp-action="Create" enctype="multipart/form-data">
+    <div style="display:flex">
+        <div style="width:2em"></div>
+        <div class="col-4">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <h4 style="text-decoration:underline">產品基本資料</h4>
+            <div class="form-group">
+                <label asp-for="ProductName" class="control-label"></label>
+                <input asp-for="ProductName" class="form-control" required />
+                <span asp-validation-for="ProductName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Category.CategoriesName" class="control-label"></label>
+                <select asp-for="CategoryId" class="form-control" id="select1"></select>
+                <span asp-validation-for="CategoryId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Country.CountryName" class="control-label"></label>
+                <select asp-for="CountryId" class="form-control" id="select2"></select>
+                <span asp-validation-for="CountryId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Price" class="control-label"></label>
+                <input asp-for="Price" class="form-control" required />
+                <span asp-validation-for="Price" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <textarea asp-for="Description" class="form-control" rows="6" cols="40"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Stock" class="control-label"></label>
+                <input asp-for="Stock" class="form-control" required />
+                <span asp-validation-for="Stock" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input asp-for="ClickCount" class="form-control" hidden />
+            </div>
+            <br />
+            <br />
+            <div class="form-group form-check form-switch">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="TakeDown" /> 產品下架
+                </label>
+            </div>
+            <div class="form-group">
+                <input asp-for="Star" class="form-control" hidden />
+            </div>
+            <br />
+            <br />
+        </div>
+        <div style="width:5em"></div>
+        <div class="col-4">
+            <h4 style="text-decoration:underline">咖啡類詳細資料</h4>
+            <div class="form-group">
+                <label asp-for="Coffee.Package.PackageName" class="control-label"></label>
+                <select asp-for="PackageId" class="form-control" id="select3"></select>
+                <span asp-validation-for="PackageId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Coffee.Roasting.RoastingName" class="control-label"></label>
+                <select asp-for="RoastingId" class="form-control" id="select4"></select>
+                <span asp-validation-for="RoastingId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Coffee.Process.ProcessName" class="control-label"></label>
+                <select asp-for="ProcessId" class="form-control" id="select5"></select>
+                <span asp-validation-for="ProcessId" class="text-danger"></span>
+            </div>
+            <br />
+            <br />
+            <div class="form-group form-check form-switch">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="RainForest" /> @Html.DisplayNameFor(model => model.RainForest)
+                </label>
+            </div>
+            <br />
+            <div class="custom-file ">
+                <div class="col-12">
+                    <div class="card card-body border-0 shadow mb-4">
+                        <h2 class="h5 mb-4">主產品圖片</h2>
+                        <div class="d-flex align-items-center">
+                            <div class="me-3">
+                                <!-- Avatar -->
+                                <img class="rounded avatar-xl" id="imgPrev" src="~/Images/新增產品預設圖.png" alt="主產品圖" draggable="true" />
+                            </div>
+                            <div class="file-field">
+                                <div class="d-flex justify-content-xl-center ms-xl-3">
+                                    <div class="d-flex">
+                                        <svg class="icon text-gray-500 me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M8 4a3 3 0 00-3 3v4a5 5 0 0010 0V7a1 1 0 112 0v4a7 7 0 11-14 0V7a5 5 0 0110 0v4a3 3 0 11-6 0V7a1 1 0 012 0v4a1 1 0 102 0V7a3 3 0 00-3-3z" clip-rule="evenodd"></path></svg>
+                                        <input type="file" name="photo" accept="image/*" id="customFile" />
+                                        <div class="d-md-block text-left">
+                                            <div class="fw-normal text-dark mb-1">上傳主產品圖片</div>
+                                            <div class="text-gray small">JPG, GIF or PNG</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="card card-body border-0 shadow mb-4">
+                        <h2 class="h5 mb-4">副產品圖片(2張)</h2>
+                        <div class="d-flex align-items-center">
+                            <div class="me-3">
+                                <img class="rounded avatar-xl " id="imgPrev0" src="~/Images/新增產品預設圖.png" alt="副產品圖1" draggable="true" />
+                            </div>
+                            <div class="me-3">
+                                <img class="rounded avatar-xl" id="imgPrev1" src="~/Images/新增產品預設圖.png" alt="副產品圖2" draggable="true" />
+                            </div>
+                            <div class="file-field">
+                                <div class="d-flex justify-content-xl-center ms-xl-3">
+                                    <div class="d-flex">
+                                        <svg class="icon text-gray-500 me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M8 4a3 3 0 00-3 3v4a5 5 0 0010 0V7a1 1 0 112 0v4a7 7 0 11-14 0V7a5 5 0 0110 0v4a3 3 0 11-6 0V7a1 1 0 012 0v4a1 1 0 102 0V7a3 3 0 00-3-3z" clip-rule="evenodd"></path></svg>
+                                        <input type="file" name="SubPhotos" accept="image/*" id="customFile1" multiple />
+                                        <div class="d-md-block text-left">
+                                            <div class="fw-normal text-dark mb-1">上傳副產品圖片</div>
+                                            <div class="text-gray small">JPG, GIF or PNG</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr />
+    <div style="display:flex">
+        <div style="width:2em"></div>
+        <div class="col-4"></div>
+        <div style="width: 5em; position: relative;">
+            <br />
+            <br />
+            <div class="form-group" style="position: absolute; bottom: 0px; right: 0px;">
+                <input type="submit" value="確認" class="btn btn-primary" />
+            </div>
+        </div>
+        <div class="col-4"></div>
+    </div>
+</form>
+@section Styles{
+    <style>
+        .mainImg {
+            max-width: 70em;
+            max-height: 15em;
+        }
+    </style>
+}
+
+@section Scripts {
+    @*@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}*@
+    <script>
+    // ===================== 將資料載入select元素 =====================
+        const selCategory = document.querySelector("#select1"),
+              selCourtry = document.querySelector("#select2"),
+              selPackage = document.querySelector("#select3"),
+              selRoasting = document.querySelector("#select4"),
+              selProcess = document.querySelector("#select5");
+
+    LoadCategories();
+    LoadCountries();
+    LoadRoastings();
+    LoadPackages();
+    LoadProcesses();
+
+    async function LoadCategories() {
+        const response = await fetch('@Url.Content("~/Admin_Api/category")'),
+              datas = await response.json();
+        datas.forEach(category => {
+            let opt = new Option(category.categoriesName, category.categoryId);
+            selCategory.options.add(opt);
+        });
+    };
+
+    async function LoadCountries() {
+        const response = await fetch('@Url.Content("~/Admin_Api/country")'),
+              datas = await response.json();
+        datas.forEach(country => {
+            let opt = new Option(country.countryName, country.countryId);
+            selCourtry.options.add(opt);
+        });
+    };
+
+
+    async function LoadRoastings() {
+        const response = await fetch('@Url.Content("~/Admin_Api/Roasting")'),
+              datas = await response.json();
+        datas.forEach(roasting => {
+            let opt = new Option(roasting.roastingName, roasting.roastingId);
+            selRoasting.options.add(opt);
+        });
+    };
+
+
+    async function LoadPackages() {
+        const response = await fetch('@Url.Content("~/Admin_Api/Package")'),
+              datas = await response.json();
+        datas.forEach(package => {
+            let opt = new Option(package.packageName, package.packageId);
+            selPackage.options.add(opt);
+        });
+    };
+
+
+    async function LoadProcesses() {
+        const response = await fetch('@Url.Content("~/Admin_Api/Process")'),
+              datas = await response.json();
+        datas.forEach(process => {
+            let opt = new Option(process.processName, process.processId);
+            selProcess.options.add(opt);
+        });
+    };
+    // ===================== 將資料載入select元素 =====================
+    // =========================== 預覽圖 ============================
+        // 主產品預覽圖
+    $("#customFile").change(function () {
+        readURL(this);
+    });
+
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (event) {
+                    $("#imgPrev").attr("src", event.target.result);
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+        // 副產品預覽圖
+        $("#customFile1").change(function () {
+            readSubUrl(this);
+        });
+
+        function readSubUrl(input) {
+            // 若上傳複數張副圖片
+            if (input.files && input.files.length <= 2) {
+                // 利用迴圈更改各預覽圖
+                for (let i = 0; i < 2; i++) {
+                    var reader = new FileReader;
+                    reader.onload = function (event) {
+                        $("#imgPrev" + `${i}`).attr("src", event.target.result);
+                    };
+
+                    reader.readAsDataURL(input.files[i]);
+                }
+
+            }
+            // 若上傳超過2張圖片
+            if (input.files && input.files.length >= 3) {
+                alert("最多只能添加2張產品副圖片");
+                return;
+            }
+        }
+    // =========================== 預覽圖 ============================
+    </script>
+}
